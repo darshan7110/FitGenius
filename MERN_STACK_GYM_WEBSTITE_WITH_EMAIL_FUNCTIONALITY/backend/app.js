@@ -65,6 +65,9 @@ app.post("/send/mail", async (req, res) => {
 });
 
 // Start server
+app.get('/', (req, res) => {
+  res.send('FitGenius backend is running!');
+});
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
