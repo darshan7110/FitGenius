@@ -1,4 +1,17 @@
 {
-  "buildCommand": "./vercel-build.sh",
-  "outputDirectory": "frontend/dist"
+  "builds": [
+    {
+      "src": "frontend/vercel-build.sh",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "frontend/dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "frontend/dist/index.html"
+    }
+  ]
 }
