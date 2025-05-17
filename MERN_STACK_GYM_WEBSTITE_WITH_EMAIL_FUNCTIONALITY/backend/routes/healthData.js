@@ -3,18 +3,23 @@ import HealthData from '../models/HealthData.js';
 import axios from 'axios';
 import dotenv from 'dotenv';
 
+// Load environment variables from .env file (e.g., GEMINI_API_KEY)
 dotenv.config();
+
 const router = express.Router();
 
 // ✅ GET /api/healthdata/:mobile — Get user by mobile number
 router.get('/:mobile', async (req, res) => {
   try {
+    // Find user in DB by mobile number from URL parameter
     const user = await HealthData.findOne({ mobile: req.params.mobile });
 
     if (!user) {
+      // Return 404 if user is not found
       return res.status(404).json({ message: 'User not found' });
     }
 
+    // Return user data if found
     res.status(200).json(user);
   } catch (err) {
     console.error('❌ Error fetching user by mobile:', err);
@@ -27,13 +32,14 @@ router.post('/', async (req, res) => {
   try {
     console.log("📥 Incoming Request Body:", req.body);
 
+    // Destructure user form input from the request body
     const {
       name, age, gender, weight, height,
       goal, activityLevel, healthConditions,
       foodPreferences, planSelected, mobile, email
     } = req.body;
 
-    // Required fields validation
+    // 🚨 Validate required fields
     if (!name || !age || !gender || !weight || !height || !goal || !activityLevel || !mobile) {
       return res.status(400).json({ error: "Missing required fields" });
     }
@@ -48,7 +54,7 @@ router.post('/', async (req, res) => {
       return res.status(200).json(existingUser);
     }
 
-    // 🧠 Prepare Gemini AI prompt
+    // 🧠 Construct prompt for Gemini AI to generate plan
     const prompt = `
 You are a fitness expert. Create a weekly personalized plan (diet, workout, goal summary) for:
 - Name: ${name}
@@ -72,13 +78,13 @@ Tuesday: ...
 Goal Summary: ...
 `;
 
-    // 🔑 Check API key
+    // 🔐 Get Gemini API Key from .env (SECRET KEY)
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       return res.status(500).json({ error: "GEMINI_API_KEY missing in .env" });
     }
 
-    // 🚀 Call Gemini API
+    // 🚀 Call Gemini API using axios
     let aiPlan = "";
     try {
       const geminiResponse = await axios.post(
@@ -93,6 +99,7 @@ Goal Summary: ...
         }
       );
 
+      // Extract AI response text
       aiPlan = geminiResponse.data.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
       console.log("✅ Gemini AI Plan Generated");
     } catch (err) {
@@ -100,12 +107,12 @@ Goal Summary: ...
       return res.status(500).json({ error: "Failed to generate AI plan" });
     }
 
-    // 🧠 Parse the AI response into parts
+    // 🧠 Split AI response into diet, workout, and goalPlan sections
     const dietSection = aiPlan.split("Workout:")[0]?.replace("Diet:", "").trim();
     const workoutSection = aiPlan.split("Workout:")[1]?.split("Goal Summary:")[0]?.trim();
     const goalPlanSection = aiPlan.split("Goal Summary:")[1]?.trim();
 
-    // 📦 Save to MongoDB
+    // 💾 Create and save new user record in MongoDB
     const newUser = new HealthData({
       name, age, gender, weight, height,
       goal, activityLevel, healthConditions,
@@ -120,9 +127,11 @@ Goal Summary: ...
     await newUser.save();
     console.log("✅ New user saved:", newUser);
 
+    // ✅ Respond with the saved user
     res.status(201).json(newUser);
 
   } catch (err) {
+    // 🛑 Catch any unexpected server errors
     console.error("❌ Server Error:", err);
     res.status(500).json({ error: "Internal server error" });
   }

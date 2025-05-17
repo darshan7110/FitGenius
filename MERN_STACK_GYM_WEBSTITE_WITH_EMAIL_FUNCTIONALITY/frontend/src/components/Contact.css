@@ -1,20 +1,22 @@
-/* CONTACT SECTION CONTAINER */
+/* ===== CONTACT SECTION CONTAINER ===== */
+/* Full-page background section with image and dark overlay */
 .contact-section {
-  background: url(/contact.jpg) rgba(0, 0, 0, 0.85);
-  background-blend-mode: darken;
+  background: url(/contact.jpg) rgba(0, 0, 0, 0.85); /* Background image with dark overlay */
+  background-blend-mode: darken; /* Blends image with black overlay */
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  padding: 80px 40px;
+  padding: 80px 40px; /* Section padding */
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
+  min-height: 100vh; /* Full viewport height */
 }
 
-/* CENTERED HEADING */
+/* ===== CENTERED SECTION HEADING ===== */
+/* Styling for the "Contact" heading */
 .contact-section h2 {
-  color: #7fffd4;
+  color: #7fffd4; /* Aquamarine */
   font-size: 2.5rem;
   text-align: center;
   margin-bottom: 50px;
@@ -22,56 +24,66 @@
   letter-spacing: 1px;
 }
 
-/* FLEX CONTAINER FOR FORM */
+/* ===== MAIN FLEX CONTAINER FOR FORM ===== */
+/* Wraps the contact form, aligned to the right on larger screens */
 .contact-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-end; /* Align form to the right */
   width: 100%;
-  max-width: 1300px;
+  max-width: 1300px; /* Prevents container from stretching too wide */
 }
 
-/* CONTACT FORM WRAPPER ON RIGHT */
+/* ===== CONTACT FORM WRAPPER ===== */
+/* Card-style container for form content */
 .contact-form {
   width: 100%;
-  max-width: 500px;
-  background-color: #1a1e2e;
-  border-radius: 16px;
+  max-width: 500px; /* Fixed width on large screens */
+  background-color: #1a1e2e; /* Dark card background */
+  border-radius: 16px; /* Rounded corners */
   padding: 40px;
-  box-shadow: 0 0 30px rgba(127, 255, 212, 0.08);
-  animation: fadeInUp 0.8s ease;
+  box-shadow: 0 0 30px rgba(127, 255, 212, 0.08); /* Subtle neon-style glow */
+  animation: fadeInUp 0.8s ease; /* Fade-up entrance animation */
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 20px; /* Space between form elements */
 }
 
+/* ===== INPUT & TEXTAREA FIELDS ===== */
+/* General styles for input fields */
 .contact-form input,
 .contact-form textarea {
   width: 100%;
   padding: 14px 16px;
   border-radius: 10px;
   border: none;
-  background-color: #2c2f40;
+  background-color: #2c2f40; /* Dark input background */
   color: #fff;
   font-size: 14px;
   transition: all 0.3s ease;
 }
 
+/* ===== FOCUS EFFECT FOR INPUTS ===== */
+/* Highlight fields on focus with glow and slightly lighter background */
 .contact-form input:focus,
 .contact-form textarea:focus {
   outline: none;
   background-color: #34374a;
-  box-shadow: 0 0 10px rgba(127, 255, 212, 0.4);
+  box-shadow: 0 0 10px rgba(127, 255, 212, 0.4); /* Aqua glow effect */
 }
 
+/* ===== TEXTAREA STYLING ===== */
+/* Prevent resizing and set fixed height */
 .contact-form textarea {
   resize: none;
   height: 120px;
 }
 
+/* ===== SUBMIT BUTTON STYLES ===== */
+/* Main CTA button styling */
 .contact-btn {
   width: 100%;
   padding: 14px;
-  background-color: #7fffd4;
+  background-color: #7fffd4; /* Aquamarine base color */
   color: #111;
   font-weight: bold;
   border: none;
@@ -79,16 +91,19 @@
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 0 10px #7fffd4;
+  box-shadow: 0 0 10px #7fffd4; /* Glow effect */
 }
 
+/* ===== BUTTON HOVER EFFECT ===== */
+/* Adds stronger glow and slight lift on hover */
 .contact-btn:hover {
-  background-color: #4fd1c5;
+  background-color: #4fd1c5; /* Slightly darker aqua */
   box-shadow: 0 0 15px #4fd1c5, 0 0 30px #4fd1c5;
-  transform: translateY(-2px);
+  transform: translateY(-2px); /* Subtle hover lift */
 }
 
-/* ANIMATION */
+/* ===== ENTRANCE ANIMATION ===== */
+/* Fade up effect used on form container */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -100,15 +115,16 @@
   }
 }
 
-/* RESPONSIVE STYLES */
+/* ===== RESPONSIVE STYLING (Mobile View) ===== */
+/* Adjust layout for smaller screens */
 @media (max-width: 768px) {
   .contact-container {
-    flex-direction: column;
+    flex-direction: column; /* Stack form vertically */
     align-items: center;
   }
 
   .contact-form {
     width: 100%;
-    max-width: 100%;
+    max-width: 100%; /* Full width on smaller screens */
   }
 }

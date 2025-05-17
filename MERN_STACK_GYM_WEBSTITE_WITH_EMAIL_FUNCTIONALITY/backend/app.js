@@ -3,9 +3,9 @@ import express from "express";
 import cors from "cors";
 import nodemailer from "nodemailer";
 import mongoose from "mongoose";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
-dotenv.config(); 
+dotenv.config(); // ✅ Load environment variables
 
 // Import routes
 import healthFormRoutes from "./routes/healthData.js";
@@ -15,13 +15,13 @@ import aiRoutes from "./routes/ai.js";
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// MongoDB connection
-mongoose.connect("mongodb://localhost:27017/GymManagement", {
+// ✅ MongoDB connection using Atlas URI from .env
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log("✅ MongoDB connected"))
-.catch((err) => console.error("MongoDB connection error:", err));
+.then(() => console.log("✅ Connected to MongoDB Atlas"))
+.catch((err) => console.error("❌ MongoDB connection error:", err));
 
 // Middleware
 app.use(cors({
@@ -33,9 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/visit", visitRoutes);
-
-app.use("/api/healthdata", healthFormRoutes); // ✅ Correct route prefix
-
+app.use("/api/healthdata", healthFormRoutes);
 app.use("/api/ai", aiRoutes);
 
 // Email route
@@ -46,8 +44,8 @@ app.post("/send/mail", async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "darshanjain707@gmail.com",
-        pass: "tizy ctde qxgj zbno", // Be sure this is stored in env in production!
+        user: "MAIL_USER",
+        pass: "MAIL_PASS", // 🔐 Move this to .env for security
       },
     });
 

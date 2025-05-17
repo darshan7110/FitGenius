@@ -1,87 +1,87 @@
 /* Navbar wrapper */
 .navbar {
-  position: sticky;
+  position: sticky; /* Makes navbar stick to the top while scrolling */
   top: 0;
-  z-index: 1000;
-  background: linear-gradient(90deg, #1a1a2e, #16213e); /* dark gradient */
-  padding: 1rem 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 1000; /* Keeps navbar above other elements */
+  background: linear-gradient(90deg, #1a1a2e, #16213e); /* Dark horizontal gradient background */
+  padding: 1rem 2rem; /* Spacing around content */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* Soft shadow for depth */
 }
 
 /* Navbar inner container */
 .navbar-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
+  display: flex; /* Horizontal layout */
+  justify-content: space-between; /* Space between logo and links */
+  align-items: center; /* Vertically center items */
+  max-width: 1200px; /* Prevents stretching too wide on large screens */
+  margin: 0 auto; /* Centers the container horizontally */
 }
 
 /* Logo */
 .logo {
-  color: #e0f7fa; /* pastel aqua */
-  font-size: 1.8rem;
-  font-weight: bold;
+  color: #e0f7fa; /* Pastel aqua color */
+  font-size: 1.8rem; /* Large text size for logo */
+  font-weight: bold; /* Emphasized logo text */
 }
 
-/* Navigation links */
+/* Navigation links container */
 .nav-links {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
+  display: flex; /* Horizontal link layout */
+  gap: 1.5rem; /* Space between links */
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
 }
 
-/* Link styles */
+/* Navigation link styles */
 .nav-links a,
 .nav-links .link {
-  color: #ffffff;
-  font-weight: 600;
-  text-decoration: none;
-  padding: 0.4rem 0.6rem;
-  transition: all 0.3s ease;
-  position: relative;
+  color: #ffffff; /* White text */
+  font-weight: 600; /* Bold links */
+  text-decoration: none; /* Remove underline */
+  padding: 0.4rem 0.6rem; /* Inner padding */
+  transition: all 0.3s ease; /* Smooth hover transition */
+  position: relative; /* Required for potential hover effects or pseudo-elements */
 }
 
-/* Hover effect: subtle aqua neon */
+/* Hover effect: subtle aqua neon glow */
 .nav-links a:hover,
 .nav-links .link:hover {
-  color: #7fffd4; /* pastel neon aqua */
-  text-shadow: 0 0 6px rgba(127, 255, 212, 0.7);
+  color: #7fffd4; /* Pastel neon aqua */
+  text-shadow: 0 0 6px rgba(127, 255, 212, 0.7); /* Glowing effect */
 }
 
-/* Hamburger icon (mobile) */
+/* Hamburger icon for mobile navigation (hidden by default) */
 .hamburger {
-  display: none;
-  flex-direction: column;
-  cursor: pointer;
+  display: none; /* Hidden on larger screens */
+  flex-direction: column; /* Stack bars vertically */
+  cursor: pointer; /* Pointer cursor on hover */
 }
 
 .hamburger span {
-  height: 3px;
-  width: 25px;
-  background: #ffffff;
-  margin: 4px 0;
-  transition: 0.3s;
+  height: 3px; /* Thickness of each bar */
+  width: 25px; /* Width of each bar */
+  background: #ffffff; /* White bars */
+  margin: 4px 0; /* Spacing between bars */
+  transition: 0.3s; /* Smooth transition (for animation if toggled) */
 }
 
-/* Mobile styles */
+/* Mobile styles: apply when screen width <= 768px */
 @media (max-width: 768px) {
   .nav-links {
-    display: none;
-    flex-direction: column;
-    background: #1a1a2e;
-    position: absolute;
-    top: 70px;
+    display: none; /* Hidden by default */
+    flex-direction: column; /* Stack links vertically */
+    background: #1a1a2e; /* Same dark background for dropdown */
+    position: absolute; /* Absolute position under navbar */
+    top: 70px; /* Space below navbar */
     left: 0;
-    width: 100%;
-    padding: 1rem;
+    width: 100%; /* Full width dropdown */
+    padding: 1rem; /* Padding inside the menu */
   }
 
   .nav-links.open {
-    display: flex;
+    display: flex; /* Show menu when 'open' class is toggled */
   }
 
   .hamburger {
-    display: flex;
+    display: flex; /* Show hamburger on small screens */
   }
 }

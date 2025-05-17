@@ -899,3 +899,81 @@ and also give them a schedule of excirese when they join gym from monday to satu
   background-color: #00d9ce;
   box-shadow: 0 0 10px #00fff7;
 }
+
+.hero-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+  padding: 20px; /* Added padding around buttons */
+  box-sizing: border-box;
+}
+
+/* Ensure enough space around each button */
+.hero-buttons button {
+  width: 260px;
+  padding: 14px 24px;
+  margin: 10px; /* Added margin to prevent overflow on hover */
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #00f0ff;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  border: 2px solid #00f0ff;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.hero-buttons button:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.6), 0 0 60px rgba(0, 255, 255, 0.4);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.hero-buttons button:active {
+  transform: scale(0.98);
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.8);
+}
+
+/* Achievement Emoji Effect */
+.hero-buttons button::after {
+  content: "🎯";
+  position: absolute;
+  right: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.8rem;
+  opacity: 0;
+  transition: all 0.6s ease;
+}
+
+.hero-buttons button:active::after {
+  right: 15px;
+  opacity: 1;
+  animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.3) rotate(15deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Responsive: Side-by-side on large screens */
+@media (min-width: 600px) {
+  .hero-buttons {
+    flex-direction: row;
+    justify-content: center;
+  }
+}

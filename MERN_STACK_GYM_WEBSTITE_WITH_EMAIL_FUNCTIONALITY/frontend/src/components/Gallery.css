@@ -1,44 +1,50 @@
+/* ===== GALLERY SECTION WRAPPER ===== */
 .gallery {
-  padding: 4rem;
-  background-color: #0d0d0d;
-  color: white;
-  text-align: center;
+  padding: 4rem; /* Adds space inside the gallery section */
+  background-color: #0d0d0d; /* Dark background for a modern look */
+  color: white; /* Default text color */
+  text-align: center; /* Center-align text */
 }
 
+/* ===== GALLERY HEADING STYLE ===== */
 .gallery h1 {
-  font-size: 3rem;
-  margin-bottom: 3rem;
-  color: #00f6ff;
+  font-size: 3rem; /* Large font size for heading */
+  margin-bottom: 3rem; /* Spacing below the heading */
+  color: #00f6ff; /* Neon blue color for visual appeal */
 }
 
+/* ===== CONTAINER FOR IMAGE COLUMNS ===== */
 .images {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
+  display: flex; /* Flexbox layout to arrange columns horizontally */
+  justify-content: center; /* Center columns horizontally */
+  gap: 30px; /* Space between columns */
+  flex-wrap: wrap; /* Wrap to next line on smaller screens */
 }
 
+/* ===== INDIVIDUAL COLUMN STYLING ===== */
 .column {
-  display: flex;
+  display: flex; /* Column layout for vertical stacking */
   flex-direction: column;
-  gap: 20px;
-  position: relative;
+  gap: 20px; /* Space between stacked images */
+  position: relative; /* Allows absolute positioning if needed */
 }
 
+/* ===== IMAGE STYLING WITH ANIMATION ===== */
 .column img {
-  width: 320px;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.25);
-  opacity: 0;
-  transform: scale(1.03);
-  animation: fadeInSmooth 1.5s ease forwards;
+  width: 320px; /* Fixed width for all images */
+  height: 220px; /* Fixed height for consistency */
+  object-fit: cover; /* Maintain aspect ratio while covering the box */
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.25); /* Soft neon box shadow */
+  opacity: 0; /* Start hidden for animation */
+  transform: scale(1.03); /* Slight zoom to enhance animation effect */
+  animation: fadeInSmooth 1.5s ease forwards; /* Smooth entry animation */
 }
 
+/* ===== ANIMATION KEYFRAMES FOR IMAGE FADE-IN ===== */
 @keyframes fadeInSmooth {
   to {
-    opacity: 1;
-    transform: scale(1);
+    opacity: 1; /* Fully visible */
+    transform: scale(1); /* Normal size */
   }
 }

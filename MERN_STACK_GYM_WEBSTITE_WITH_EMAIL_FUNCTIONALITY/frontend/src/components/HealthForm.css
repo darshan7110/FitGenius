@@ -1,6 +1,6 @@
-/* HealthForm.css */
-
-/* Container */
+/* ----------------------------------
+   Global Container
+---------------------------------- */
 .health-form-container {
   display: flex;
   flex-direction: column;
@@ -12,11 +12,13 @@
   color: #ffffff;
 }
 
-/* Form Card */
+/* ----------------------------------
+   Main Form Styling
+---------------------------------- */
 .health-form {
   background: #121212;
   padding: 2rem;
-  align-items: center; 
+  align-items: center;
   border-radius: 15px;
   box-shadow: 0 12px 30px rgba(0, 255, 255, 0.15);
   width: 100%;
@@ -33,12 +35,14 @@
   text-shadow: 0 0 5px #00d9ff;
 }
 
-/* Inputs */
+/* ----------------------------------
+   Input, Select, Textarea Fields
+---------------------------------- */
 .health-form input,
 .health-form select,
 .health-form textarea {
   width: 100%;
-  align-items: center; 
+  align-items: center;
   padding: 0.9rem;
   margin-bottom: 1rem;
   border: none;
@@ -57,11 +61,12 @@
   background: #2a2a2a;
 }
 
-/* Submit Button */
+/* ----------------------------------
+   Submit Button Styling
+---------------------------------- */
 .health-form button {
   width: 100%;
   padding: 0.9rem;
-  
   background: linear-gradient(135deg, #00d9ff, #00ffaa);
   color: #121212;
   border: none;
@@ -78,7 +83,9 @@
   box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
 }
 
-/* Animation */
+/* ----------------------------------
+   Fade Animation
+---------------------------------- */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -90,7 +97,9 @@
   }
 }
 
-/* Responsive */
+/* ----------------------------------
+   Responsive Adjustments for Small Screens
+---------------------------------- */
 @media (max-width: 600px) {
   .health-form {
     padding: 1.5rem;
@@ -101,7 +110,9 @@
   }
 }
 
-/* User Details Card */
+/* ----------------------------------
+   Existing User's Plan Container
+---------------------------------- */
 .user-details-container {
   background: #1a1a1a;
   border-radius: 16px;
@@ -131,6 +142,9 @@
   text-shadow: 0 0 5px #00ffc8;
 }
 
+/* ----------------------------------
+   User Info Grid Layout
+---------------------------------- */
 .user-details-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(150px, 1fr));
@@ -142,7 +156,9 @@
   color: #00ffd5;
 }
 
-/* Smooth entrance */
+/* ----------------------------------
+   Accessibility Optimization
+---------------------------------- */
 @media (prefers-reduced-motion: no-preference) {
   .user-details-container,
   .health-form {
@@ -150,6 +166,9 @@
   }
 }
 
+/* ----------------------------------
+   AI Generated Weekly Plan Display
+---------------------------------- */
 .ai-plan-clean {
   background-color: #111;
   padding: 20px;
@@ -192,8 +211,9 @@
   border-radius: 5px;
 }
 
-
-/* Loader */
+/* ----------------------------------
+   Loading Indicator
+---------------------------------- */
 .loader {
   margin: 2rem auto;
   font-size: 1.2rem;
@@ -211,7 +231,9 @@
   }
 }
 
-/* New User Form */
+/* ----------------------------------
+   New User Form Styling
+---------------------------------- */
 .health-form-formatted {
   background: #121212;
   padding: 2rem;
@@ -232,6 +254,9 @@
   text-shadow: 0 0 5px #00d9ff;
 }
 
+/* ----------------------------------
+   Form Field Grid Layout
+---------------------------------- */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -265,6 +290,9 @@
   box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
 }
 
+/* ----------------------------------
+   Form Button Actions
+---------------------------------- */
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -304,7 +332,9 @@
   box-shadow: 0 8px 16px rgba(255, 0, 0, 0.2);
 }
 
-/* Plan JSON Box */
+/* ----------------------------------
+   Raw JSON Plan Display
+---------------------------------- */
 .plan-box {
   background: #0d0d0d;
   padding: 1rem;
@@ -319,14 +349,16 @@
   box-shadow: 0 0 8px rgba(0, 255, 255, 0.1);
 }
 
-/* Ensure container spacing and scaling */
+/* ----------------------------------
+   Responsive Utility Adjustments
+---------------------------------- */
 .health-form-container {
   padding: 1rem;
   max-width: 100%;
   box-sizing: border-box;
 }
 
-/* Responsive Form Grid */
+/* Responsive Grids */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -345,7 +377,6 @@
   }
 }
 
-/* Responsive Button Layout */
 .form-actions {
   flex-direction: column;
   gap: 0.75rem;
@@ -358,7 +389,6 @@
   }
 }
 
-/* User Details Grid Responsive */
 .user-details-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -382,20 +412,20 @@
   }
 }
 
-/* Responsive Input Width */
+/* Inputs */
 input[type="text"],
 input[type="number"],
 input[type="email"] {
   width: 100%;
 }
 
-/* Plan Box responsiveness */
+/* Plan Scroll Box */
 .plan-box {
   max-width: 100%;
   overflow-x: auto;
 }
 
-/* Button spacing fix for small screens */
+/* Button width adjustments */
 button {
   width: 100%;
   max-width: 100%;
@@ -407,16 +437,17 @@ button {
   }
 }
 
-
 .health-form button + button {
   margin-top: 0.5rem;
 }
-
 
 .health-form .spaced-button {
   margin-bottom: 0.8rem;
 }
 
+/* ----------------------------------
+   User Details Expanded UI
+---------------------------------- */
 .user-details-container {
   background-color: #0d1117;
   color: #e6f1ff;
@@ -444,6 +475,9 @@ button {
   border-radius: 0.75rem;
 }
 
+/* ----------------------------------
+   AI Plan Box Scroll
+---------------------------------- */
 .ai-plan-section {
   display: flex;
   flex-direction: column;
@@ -464,6 +498,9 @@ button {
   box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.2);
 }
 
+/* ----------------------------------
+   Back and Home Buttons
+---------------------------------- */
 .back-button {
   display: block;
   margin: 2rem auto 0;
@@ -480,6 +517,7 @@ button {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
 }
+
 .home-button {
   margin-top: 10px;
   background: linear-gradient(to right, #0ff, #0f9);
@@ -493,6 +531,7 @@ button {
   cursor: pointer;
   transition: 0.3s;
 }
+
 .home-button:hover {
   box-shadow: 0 0 15px #0ff;
   transform: scale(1.02);
