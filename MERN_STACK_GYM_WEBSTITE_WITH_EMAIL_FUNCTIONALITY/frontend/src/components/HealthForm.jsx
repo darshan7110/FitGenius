@@ -85,7 +85,8 @@ const HealthForm = () => {
     try {
       const fullData = { ...formData, planSelected };
       console.log(fullData)
-      await axios.post('http://localhost:4000/api/healthdata', fullData);
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/healthdata`, fullData);
+
       resetToSearch();
     } catch (err) {
       alert('Error saving user');
