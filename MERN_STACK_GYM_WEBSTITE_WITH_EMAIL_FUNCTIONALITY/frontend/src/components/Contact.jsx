@@ -21,7 +21,7 @@ const Contact = () => {
     try {
       // ---- API REQUEST ----
       const { data } = await axios.post(
-        "http://localhost:4000/send/mail", // ⚠️ LOCAL BACKEND API ENDPOINT
+        "https://fitgenius-production.up.railway.app/send/mail", // ⚠️ LOCAL BACKEND API ENDPOINT
         {
           name,
           email,
