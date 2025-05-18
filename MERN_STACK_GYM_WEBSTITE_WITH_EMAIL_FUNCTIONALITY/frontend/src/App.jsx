@@ -52,7 +52,7 @@ const Home = () => (
 const App = () => {
   useEffect(() => {
     // API call to count or track visits
-    axios.get("http://localhost:4000/api/visit").catch(console.error);
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/visit`).catch(console.error);
   }, []);
 
   return (
