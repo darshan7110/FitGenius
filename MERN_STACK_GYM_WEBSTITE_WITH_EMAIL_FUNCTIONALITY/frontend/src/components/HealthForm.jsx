@@ -43,7 +43,7 @@ const HealthForm = () => {
     if (!mobile.trim()) return;
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:4000/api/healthdata/${mobile}`);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/healthdata/${mobile}`);
       setUser(res.data);
       setNotFound(false);
     } catch (err) {
