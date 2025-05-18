@@ -43,7 +43,7 @@ const HealthForm = () => {
     if (!mobile.trim()) return;
     setLoading(true);
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/healthdata/${mobile}`);
+      const res = await axios.get(`https://fitgenius-production.up.railway.app/api/healthdata/${mobile}`);
       setUser(res.data);
       setNotFound(false);
     } catch (err) {
@@ -85,7 +85,7 @@ const HealthForm = () => {
     try {
       const fullData = { ...formData, planSelected };
       console.log(fullData)
-      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/healthdata`, fullData);
+      await axios.post(`https://fitgenius-production.up.railway.app/api/healthdata`, fullData);
 
       resetToSearch();
     } catch (err) {
