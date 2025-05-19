@@ -1,14 +1,11 @@
-// app.js
 import express from "express";
 import cors from "cors";
 import nodemailer from "nodemailer";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-dotenv.config(); // ✅ Load environment variables
+dotenv.config();
 
-// Import routes
-import otpRoutes from './routes/otpRoutes.js'; // add this near other imports
 import healthFormRoutes from "./routes/healthData.js";
 import visitRoutes from "./routes/visit.js";
 import aiRoutes from "./routes/ai.js";
@@ -16,7 +13,6 @@ import aiRoutes from "./routes/ai.js";
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// ✅ MongoDB connection using Atlas URI from .env
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -24,7 +20,6 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("✅ Connected to MongoDB Atlas"))
 .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Middleware
 app.use(cors({
   origin: 'https://fitgenius-9rps.onrender.com',
   credentials: true 
@@ -33,22 +28,20 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// Active routes
 app.use("/api/visit", visitRoutes);
 app.use("/api/healthdata", healthFormRoutes);
 app.use("/api/ai", aiRoutes);
-app.use('/api/otp', otpRoutes);
 
-// Email route
+// Email contact route
 app.post("/send/mail", async (req, res) => {
   const { name, email, message } = req.body;
-
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS, // 🔐 Move this to .env for security
+        pass: process.env.MAIL_PASS,
       },
     });
 
@@ -67,11 +60,10 @@ app.post("/send/mail", async (req, res) => {
   }
 });
 
-// Start server
 app.get('/', (req, res) => {
   res.send('FitGenius backend is running!');
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
