@@ -13,6 +13,7 @@ const HealthForm = () => {
   const [otpVerified, setOtpVerified] = useState(false);
   const [otpInput, setOtpInput] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [showForm, setShowForm] = useState(false); // Re-added state
 
   const handleSearchAndSendOTP = async () => {
     if (!mobile.trim()) {
@@ -74,6 +75,7 @@ const HealthForm = () => {
     setOtpVerified(false);
     setOtpInput('');
     setNotFound(false);
+    setShowForm(false); // Reset form toggle
   };
 
   return (
@@ -81,7 +83,7 @@ const HealthForm = () => {
       <ToastContainer />
       {loading && <div className="loader">Loading...</div>}
 
-      {!user && (
+      {!user && !showForm && (
         <div className="health-form mb-6">
           <label htmlFor="mobile">Enter Phone Number</label>
           <input
@@ -93,13 +95,12 @@ const HealthForm = () => {
           <button onClick={handleSearchAndSendOTP}>🔍 Search & Send OTP</button>
 
           {notFound && (
-            <>
-              <div className="text-red-400 mt-2">❌ User not found.</div>
-              <button className="add-user-button" onClick={() => window.location.href = '/add-user'}>
-                ➕ Add New User
-              </button>
-            </>
+            <div className="text-red-400 mt-2">❌ User not found.</div>
           )}
+
+          <button className="add-user-button" onClick={() => setShowForm(true)}>
+            ➕ Add New User
+          </button>
 
           <button className="home-button" onClick={() => window.location.href = '/'}>
             🏠 Home Page
@@ -107,40 +108,45 @@ const HealthForm = () => {
         </div>
       )}
 
-      {user && otpSent && !otpVerified && (
-        <div className="otp-section">
-          <h3>📧 OTP sent to: {userEmail}</h3>
-          <input
-            type="text"
-            placeholder="Enter OTP"
-            value={otpInput}
-            onChange={e => setOtpInput(e.target.value)}
-          />
-          <button type="button" className="verify-button" onClick={handleVerifyOTP}>✅ Verify OTP</button>
-        </div>
-      )}
-
-      {user && otpVerified && (
+      {user && !loading && (
         <div className="user-details-container">
-          <h2>✅ Verified User Plan</h2>
+          <h2>✅ Existing User Found</h2>
           <div className="user-details-grid">
             {Object.entries(user)
-              .filter(([key]) => !['_id', '__v', 'planSelected', 'diet', 'workout', 'goalPlan'].includes(key))
+              .filter(([key]) => !['_id', '__v', 'diet', 'workout', 'goalPlan'].includes(key))
               .map(([key, val]) => (
                 <div key={key}><strong>{key.replace(/([A-Z])/g, ' $1')}:</strong> {val || 'N/A'}</div>
               ))}
           </div>
 
-          <h3>🏋️‍♂️ Workout Plan</h3>
-          <div className="plan-box-scroll">{user.workout?.content || 'No Workout Plan available.'}</div>
+          {otpSent && !otpVerified && (
+            <div className="otp-section">
+              <input
+                type="text"
+                placeholder="Enter OTP"
+                value={otpInput}
+                onChange={e => setOtpInput(e.target.value)}
+              />
+              <button className="verify-button" onClick={handleVerifyOTP}>✅ Verify OTP</button>
+            </div>
+          )}
 
-          <h3>🥗 Diet Plan</h3>
-          <div className="plan-box-scroll">{user.diet?.content || 'No Diet Plan available.'}</div>
+          {otpVerified && (
+            <div className="otp-success">✅ OTP Verified</div>
+          )}
 
-          <h3>🎯 Goal Plan</h3>
-          <div className="plan-box-scroll">{user.goalPlan?.content || 'No Goal Plan available.'}</div>
+          <button className="back-button" onClick={resetToSearch}>🔙 Back</button>
+        </div>
+      )}
 
-          <button onClick={resetToSearch} className="back-button">🔙 Back</button>
+      {showForm && (
+        <div className="user-add-form">
+          <h2>📝 Add New User</h2>
+          {/* You can render your full form component here or navigate to another route */}
+          <button className="go-form" onClick={() => window.location.href = '/add-user'}>
+            👉 Go to Full Form
+          </button>
+          <button className="cancel-button" onClick={resetToSearch}>❌ Cancel</button>
         </div>
       )}
     </div>
