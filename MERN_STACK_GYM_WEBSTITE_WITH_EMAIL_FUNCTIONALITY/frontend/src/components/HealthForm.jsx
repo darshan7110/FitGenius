@@ -1,3 +1,4 @@
+// HealthForm.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './HealthForm.css';
@@ -5,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const HealthForm = () => {
+  // State variables
   const [mobile, setMobile] = useState('');
   const [user, setUser] = useState(null);
   const [notFound, setNotFound] = useState(false);
@@ -18,11 +20,14 @@ const HealthForm = () => {
   });
 
   const [planSelected, setPlanSelected] = useState('');
+
+  // Load selected plan from localStorage on page load
   useEffect(() => {
     const storedPlan = localStorage.getItem('selectedPlan');
     if (storedPlan) setPlanSelected(storedPlan);
   }, []);
 
+  // Reset all states to go back to search mode
   const resetToSearch = () => {
     setShowForm(false);
     setUser(null);
@@ -35,6 +40,7 @@ const HealthForm = () => {
     });
   };
 
+  // Check if user exists by mobile number
   const handleSearchUser = async () => {
     if (!mobile.trim()) return;
     setLoading(true);
@@ -50,6 +56,7 @@ const HealthForm = () => {
     }
   };
 
+  // Form validation logic
   const validateForm = () => {
     const nameRegex = /^[A-Za-z\s]+$/;
     if (!nameRegex.test(formData.name)) return 'Name should contain only letters';
@@ -67,6 +74,7 @@ const HealthForm = () => {
     return null;
   };
 
+  // Submit new user and generate plan
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationError = validateForm();
@@ -93,6 +101,7 @@ const HealthForm = () => {
     <div className="health-form-container">
       {loading && <div className="loader">Loading...</div>}
 
+      {/* Mobile Search Input */}
       {!user && !showForm && !loading && (
         <div className="health-form mb-6">
           <label htmlFor="mobile" className="block text-lg font-medium mb-2">Enter Phone Number</label>
@@ -109,6 +118,7 @@ const HealthForm = () => {
         </div>
       )}
 
+      {/* If user found, show plan */}
       {user && !loading && (
         <div className="user-details-container">
           <h2 className="user-details-title">✅ Existing User Plan</h2>
@@ -144,6 +154,7 @@ const HealthForm = () => {
         </div>
       )}
 
+      {/* Show form to create new user */}
       {showForm && !loading && (
         <form onSubmit={handleSubmit} className="health-form-formatted">
           <h2 className="form-heading">📝 New User Details*</h2>
@@ -181,6 +192,8 @@ const HealthForm = () => {
           </div>
         </form>
       )}
+
+      <ToastContainer />
     </div>
   );
 };

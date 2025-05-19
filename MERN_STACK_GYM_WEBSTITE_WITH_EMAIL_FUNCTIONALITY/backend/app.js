@@ -1,18 +1,17 @@
+// app.js
 import express from "express";
 import cors from "cors";
 import nodemailer from "nodemailer";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
+// Load environment variables from .env file
 dotenv.config();
-
-import healthFormRoutes from "./routes/healthData.js";
-import visitRoutes from "./routes/visit.js";
-import aiRoutes from "./routes/ai.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -20,20 +19,29 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => console.log("✅ Connected to MongoDB Atlas"))
 .catch((err) => console.error("❌ MongoDB connection error:", err));
 
+// Enable CORS for frontend
 app.use(cors({
-  origin: 'https://fitgenius-9rps.onrender.com',
+  origin: 'https://fitgenius-9rps.onrender.com', // Frontend URL
   credentials: true 
 }));
 
+// Enable JSON and form body parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Active routes
-app.use("/api/visit", visitRoutes);
-app.use("/api/healthdata", healthFormRoutes);
-app.use("/api/ai", aiRoutes);
+// Import API routes
+import healthFormRoutes from "./routes/healthData.js";
+import visitRoutes from "./routes/visit.js";
+import aiRoutes from "./routes/ai.js";
+import otpRoutes from "./routes/otpRoutes.js"; // OTP routes
 
-// Email contact route
+// Use routes
+app.use("/api/visit", visitRoutes);            // Track visit data
+app.use("/api/healthdata", healthFormRoutes);  // Health data (diet/workout)
+app.use("/api/ai", aiRoutes);                  // AI-generated plans
+app.use("/api/otp", otpRoutes);                // OTP email verification
+
+// Contact form mail route
 app.post("/send/mail", async (req, res) => {
   const { name, email, message } = req.body;
   try {
@@ -60,10 +68,12 @@ app.post("/send/mail", async (req, res) => {
   }
 });
 
+// Test route
 app.get('/', (req, res) => {
   res.send('FitGenius backend is running!');
 });
 
+// Start server
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server is running on port ${PORT}`);
 });
