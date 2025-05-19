@@ -1,3 +1,4 @@
+// HealthForm.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './HealthForm.css';
@@ -50,29 +51,6 @@ const HealthForm = () => {
       goal: '', activityLevel: '', healthConditions: '',
       foodPreferences: '', email: '', mobile: ''
     });
-  };
-
-  const handleGetEmailFromMobile = async () => {
-    if (!mobile.trim()) {
-      toast.error('❌ Please enter mobile number');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await axios.get(`https://fitgenius-production.up.railway.app/api/healthdata/email/${mobile}`);
-      if (res.data?.email) {
-        setSearchEmail(res.data.email);
-        toast.success('📩 Email found and pre-filled');
-      } else {
-        toast.error('❌ No user found with this mobile');
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error('❌ Error fetching email');
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleSendSearchOTP = async () => {
@@ -224,39 +202,31 @@ const HealthForm = () => {
       <ToastContainer />
       {loading && <div className="loader">Loading...</div>}
 
-      {!user && !showForm && !loading && (
+      {!user && !showForm && (
         <div className="health-form mb-6">
           <label htmlFor="mobile">Enter Phone Number</label>
           <input id="mobile" value={mobile} onChange={e => setMobile(e.target.value)} placeholder="Enter mobile number" />
-
-          <button onClick={handleGetEmailFromMobile}>📩 Get Email from Mobile</button>
-
-          {searchEmail && (
-            <>
-              <input type="email" value={searchEmail} readOnly />
-              {!otpSentSearch ? (
-                <button onClick={handleSendSearchOTP}>📨 Send OTP</button>
-              ) : !otpVerifiedSearch ? (
-                <div className="otp-section">
-                  <input type="text" placeholder="Enter OTP" value={otpInputSearch} onChange={(e) => setOtpInputSearch(e.target.value)} />
-                  <button onClick={handleVerifySearchOTP}>✅ Verify OTP</button>
-                  <button onClick={() => setOtpSentSearch(false)}>🔄 Resend OTP</button>
-                  <button onClick={() => {
-                    setSearchEmail('');
-                    setOtpInputSearch('');
-                    setOtpSentSearch(false);
-                  }}>🔙 Back</button>
-                </div>
-              ) : (
-                <div className="otp-success">✅ OTP Verified</div>
-              )}
-            </>
+          <input type="email" placeholder="Enter email for OTP" value={searchEmail} onChange={(e) => setSearchEmail(e.target.value)} />
+          {!otpSentSearch ? (
+            <button type="button" onClick={handleSendSearchOTP}>📨 Send OTP</button>
+          ) : !otpVerifiedSearch ? (
+            <div className="otp-section">
+              <input type="text" placeholder="Enter OTP" value={otpInputSearch} onChange={(e) => setOtpInputSearch(e.target.value)} />
+              <button onClick={handleVerifySearchOTP}>✅ Verify OTP</button>
+              <button onClick={() => {
+                setOtpSentSearch(false);
+                setOtpInputSearch('');
+              }}>🔙 Back</button>
+            </div>
+          ) : (
+            <div className="otp-success">✅ OTP Verified</div>
           )}
-
-          <button onClick={handleSearchUser}>🔍 Search User</button>
-          <button onClick={() => setShowForm(true)}>➕ Add New User</button>
+          <div className="search-actions">
+            <button onClick={handleSearchUser}>🔍 Search User</button>
+            <button onClick={() => setShowForm(true)}>➕ Add New User</button>
+            <button className="home-button" onClick={() => window.location.href = '/'}>🏠 Home Page</button>
+          </div>
           {notFound && <div className="text-red-400 mt-2">❌ User not found.</div>}
-          <button className="home-button" onClick={() => window.location.href = '/'}>🏠 Home Page</button>
         </div>
       )}
 
@@ -317,7 +287,6 @@ const HealthForm = () => {
             <div className="otp-section">
               <input type="text" placeholder="Enter OTP" value={otpInput} onChange={e => setOtpInput(e.target.value)} />
               <button type="button" className="verify-button" onClick={handleVerifyOTP}>✅ Verify OTP</button>
-              <button type="button" onClick={handleSendOTP}>🔄 Resend OTP</button>
               <button type="button" className="cancel-button mt-2" onClick={() => {
                 setOtpSent(false);
                 setOtpInput('');
