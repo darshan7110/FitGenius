@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 dotenv.config(); // ✅ Load environment variables
 
 // Import routes
+import otpRoutes from './routes/otpRoutes.js'; // add this near other imports
 import healthFormRoutes from "./routes/healthData.js";
 import visitRoutes from "./routes/visit.js";
 import aiRoutes from "./routes/ai.js";
@@ -36,6 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/visit", visitRoutes);
 app.use("/api/healthdata", healthFormRoutes);
 app.use("/api/ai", aiRoutes);
+app.use('/api/otp', otpRoutes);
 
 // Email route
 app.post("/send/mail", async (req, res) => {

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './HealthForm.css';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // Main HealthForm component
 const HealthForm = () => {
   // State variables for mobile input, fetched user, form visibility, loading status
@@ -10,7 +11,11 @@ const HealthForm = () => {
   const [notFound, setNotFound] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [email, setEmail] = useState('');
+const [otpSent, setOtpSent] = useState(false);
+const [otp, setOtp] = useState('');
+const [otpVerified, setOtpVerified] = useState(false);
+const [otpLoading, setOtpLoading] = useState(false);
   // State for capturing form input data
   const [formData, setFormData] = useState({
     name: '', age: '', gender: '', weight: '', height: '',
@@ -86,7 +91,7 @@ const HealthForm = () => {
       const fullData = { ...formData, planSelected };
       console.log(fullData)
       await axios.post(`https://fitgenius-production.up.railway.app/api/healthdata`, fullData);
-
+      toast.success('✅ User saved and plan generated successfully!');
       resetToSearch();
     } catch (err) {
       alert('Error saving user');
@@ -103,22 +108,95 @@ const HealthForm = () => {
 
       {/* Mobile input and user search section */}
       {!user && !showForm && !loading && (
-        <div className="health-form mb-6">
-          <label htmlFor="mobile" className="block text-lg font-medium mb-2">Enter Phone Number</label>
-          <input
-            id="mobile"
-            value={mobile}
-            onChange={e => setMobile(e.target.value)}
-            placeholder="Enter mobile number"
-          />
-          <button onClick={handleSearchUser} className="mt-3">🔍 Search User</button>
-          <button onClick={() => setShowForm(true)} className="mt-3">➕ Add New User</button>
-          {notFound && <div className="text-red-400 mt-2">❌ User not found.</div>}
-          <button className="home-button" onClick={() => window.location.href = '/'}>
-            🏠 Home Page
-          </button>
-        </div>
-      )}
+  <div className="health-form mb-6">
+    <label htmlFor="email" className="block text-lg font-medium mb-2">Enter Email for OTP Verification</label>
+    <input
+      id="email"
+      type="email"
+      value={email}
+      onChange={e => setEmail(e.target.value)}
+      placeholder="Enter your email"
+      disabled={otpSent}
+    />
+    {!otpSent ? (
+      <button
+        onClick={async () => {
+          if (!email) {
+            toast.error('Please enter email');
+            return;
+          }
+          setOtpLoading(true);
+          try {
+            await axios.post('/api/otp/send', { email });
+            toast.success('OTP sent to your email');
+            setOtpSent(true);
+          } catch {
+            toast.error('Failed to send OTP');
+          } finally {
+            setOtpLoading(false);
+          }
+        }}
+        disabled={otpLoading}
+        className="mt-3"
+      >
+        {otpLoading ? 'Sending OTP...' : 'Send OTP'}
+      </button>
+    ) : (
+      <>
+        <label htmlFor="otp" className="block text-lg font-medium mt-3">Enter OTP</label>
+        <input
+          id="otp"
+          value={otp}
+          onChange={e => setOtp(e.target.value)}
+          placeholder="6-digit OTP"
+          maxLength={6}
+        />
+        <button
+          onClick={async () => {
+            if (!otp) {
+              toast.error('Please enter OTP');
+              return;
+            }
+            setOtpLoading(true);
+            try {
+              await axios.post('/api/otp/verify', { email, otp });
+              toast.success('OTP verified! You can search now.');
+              setOtpVerified(true);
+            } catch (error) {
+              toast.error(error.response?.data?.message || 'Invalid OTP');
+            } finally {
+              setOtpLoading(false);
+            }
+          }}
+          disabled={otpLoading || otpVerified}
+          className="mt-2"
+        >
+          {otpLoading ? 'Verifying...' : otpVerified ? 'Verified' : 'Verify OTP'}
+        </button>
+      </>
+    )}
+
+    {otpVerified && (
+      <>
+        <label htmlFor="mobile" className="block text-lg font-medium mt-4">Enter Phone Number</label>
+        <input
+          id="mobile"
+          value={mobile}
+          onChange={e => setMobile(e.target.value)}
+          placeholder="Enter mobile number"
+        />
+        <button onClick={handleSearchUser} className="mt-3">🔍 Search User</button>
+      </>
+    )}
+
+    <button onClick={() => setShowForm(true)} className="mt-3">➕ Add New User</button>
+    {notFound && <div className="text-red-400 mt-2">❌ User not found.</div>}
+    <button className="home-button" onClick={() => window.location.href = '/'}>
+      🏠 Home Page
+    </button>
+  </div>
+)}
+
 
       {/* Displaying existing user and AI-generated plans */}
       {user && !loading && (
@@ -159,21 +237,21 @@ const HealthForm = () => {
       {/* New user registration form */}
       {showForm && !loading && (
         <form onSubmit={handleSubmit} className="health-form-formatted">
-          <h2 className="form-heading">📝 New User Details</h2>
+          <h2 className="form-heading">📝 New User Details*</h2>
           <div className="form-grid">
             {/* Input fields for new user form */}
             <div className="form-group">
-              <label className="form-label">Name</label>
+              <label className="form-label">Name*</label>
               <input className="form-input" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Age</label>
+              <label className="form-label">Age*</label>
               <input type="number" className="form-input" value={formData.age} onChange={e => setFormData({ ...formData, age: e.target.value })} />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Gender</label>
+              <label className="form-label">Gender*</label>
               <select className="form-input" value={formData.gender} onChange={e => setFormData({ ...formData, gender: e.target.value })}>
                 <option value="">Select</option>
                 <option>Male</option>
@@ -183,17 +261,17 @@ const HealthForm = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Weight (kg)</label>
+              <label className="form-label">Weight (kg)*</label>
               <input type="number" className="form-input" value={formData.weight} onChange={e => setFormData({ ...formData, weight: e.target.value })} />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Height (cm)</label>
+              <label className="form-label">Height (cm)*</label>
               <input type="number" className="form-input" value={formData.height} onChange={e => setFormData({ ...formData, height: e.target.value })} />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Activity Level</label>
+              <label className="form-label">Activity Level*</label>
               <select className="form-input" value={formData.activityLevel} onChange={e => setFormData({ ...formData, activityLevel: e.target.value })}>
                 <option value="">Select</option>
                 <option>Low</option>
@@ -204,7 +282,7 @@ const HealthForm = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Goal</label>
+              <label className="form-label">Goal *</label>
               <select className="form-input" value={formData.goal} onChange={e => setFormData({ ...formData, goal: e.target.value })}>
                 <option value="">Select</option>
                 <option>Lose Weight</option>
@@ -214,22 +292,22 @@ const HealthForm = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Health Conditions</label>
+              <label className="form-label">Health Conditions *</label>
               <input className="form-input" value={formData.healthConditions} onChange={e => setFormData({ ...formData, healthConditions: e.target.value })} />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Food Preferences</label>
+              <label className="form-label">Food Preferences *</label>
               <input className="form-input" value={formData.foodPreferences} onChange={e => setFormData({ ...formData, foodPreferences: e.target.value })} />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Mobile Number</label>
+              <label className="form-label">Mobile Number *</label>
               <input className="form-input" value={formData.mobile} onChange={e => setFormData({ ...formData, mobile: e.target.value })} placeholder="10-digit number starting with 6-9" />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Email (optional)</label>
+              <label className="form-label">Email *</label>
               <input type="email" className="form-input" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
             </div>
           </div>
