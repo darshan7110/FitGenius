@@ -6,11 +6,18 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const HealthForm = () => {
+  const [otp, setOtp] = useState("");
   const [mobile, setMobile] = useState('');
   const [user, setUser] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [otpSentSearch, setOtpSentSearch] = useState(false);
+  const [otpVerifiedSearch, setOtpVerifiedSearch] = useState(false);
+  const [otpInputSearch, setOtpInputSearch] = useState('');
+  const [searchEmail, setSearchEmail] = useState('');
+
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const [otpInput, setOtpInput] = useState('');
@@ -35,6 +42,10 @@ const HealthForm = () => {
     setOtpSent(false);
     setOtpVerified(false);
     setOtpInput('');
+    setOtpSentSearch(false);
+    setOtpVerifiedSearch(false);
+    setOtpInputSearch('');
+    setSearchEmail('');
     setFormData({
       name: '', age: '', gender: '', weight: '', height: '',
       goal: '', activityLevel: '', healthConditions: '',
@@ -42,8 +53,54 @@ const HealthForm = () => {
     });
   };
 
+  const handleSendSearchOTP = async () => {
+    if (!searchEmail.includes('@')) {
+      toast.error('❌ Please enter a valid email to receive OTP');
+      return;
+    }
+    setLoading(true);
+    try {
+      await axios.post('https://fitgenius-production.up.railway.app/api/otp/send', {
+        email: searchEmail
+      });
+      toast.success('📨 OTP sent to your email!');
+      setOtpSentSearch(true);
+    } catch (err) {
+      console.error(err);
+      toast.error('❌ Failed to send OTP');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifySearchOTP = async () => {
+    if (!otpInputSearch.trim()) {
+      toast.error('❌ Please enter OTP');
+      return;
+    }
+    setLoading(true);
+    try {
+      await axios.post('https://fitgenius-production.up.railway.app/api/otp/verify', {
+        email: searchEmail,
+        otp: otpInputSearch
+      });
+      toast.success('✅ OTP verified!');
+      setOtpVerifiedSearch(true);
+    } catch (err) {
+      console.error(err);
+      toast.error('❌ Invalid or expired OTP');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSearchUser = async () => {
     if (!mobile.trim()) return;
+    if (!otpVerifiedSearch) {
+      toast.error('❌ Please verify OTP before searching');
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await axios.get(`https://fitgenius-production.up.railway.app/api/healthdata/${mobile}`);
@@ -78,7 +135,7 @@ const HealthForm = () => {
   const handleSendOTP = async () => {
     const validationError = validateForm();
     if (validationError) {
-      alert(validationError);
+      toast.error(validationError);
       return;
     }
 
@@ -99,7 +156,7 @@ const HealthForm = () => {
 
   const handleVerifyOTP = async () => {
     if (!otpInput.trim()) {
-      alert('Please enter OTP');
+      toast.error('Please enter OTP');
       return;
     }
 
@@ -149,6 +206,21 @@ const HealthForm = () => {
         <div className="health-form mb-6">
           <label htmlFor="mobile">Enter Phone Number</label>
           <input id="mobile" value={mobile} onChange={e => setMobile(e.target.value)} placeholder="Enter mobile number" />
+          <input type="email" placeholder="Enter email for OTP" value={searchEmail} onChange={(e) => setSearchEmail(e.target.value)} />
+          {!otpSentSearch ? (
+            <button type="button" onClick={handleSendSearchOTP}>📨 Send OTP</button>
+          ) : !otpVerifiedSearch ? (
+            <div className="otp-section">
+              <input type="text" placeholder="Enter OTP" value={otpInputSearch} onChange={(e) => setOtpInputSearch(e.target.value)} />
+              <button onClick={handleVerifySearchOTP}>✅ Verify OTP</button>
+              <button onClick={() => {
+                setOtpSentSearch(false);
+                setOtpInputSearch('');
+              }}>🔙 Back</button>
+            </div>
+          ) : (
+            <div className="otp-success">✅ OTP Verified</div>
+          )}
           <button onClick={handleSearchUser}>🔍 Search User</button>
           <button onClick={() => setShowForm(true)}>➕ Add New User</button>
           {notFound && <div className="text-red-400 mt-2">❌ User not found.</div>}
@@ -166,16 +238,12 @@ const HealthForm = () => {
                 <div key={key}><strong>{key.replace(/([A-Z])/g, ' $1')}:</strong> {val || 'N/A'}</div>
               ))}
           </div>
-
           <h3>🏋️‍♂️ Workout Plan</h3>
           <div className="plan-box-scroll">{user.workout?.content || 'No Workout Plan available.'}</div>
-
           <h3>🥗 Diet Plan</h3>
           <div className="plan-box-scroll">{user.diet?.content || 'No Diet Plan available.'}</div>
-
           <h3>🎯 Goal Plan</h3>
           <div className="plan-box-scroll">{user.goalPlan?.content || 'No Goal Plan available.'}</div>
-
           <button onClick={resetToSearch} className="back-button">🔙 Back to Search</button>
         </div>
       )}
@@ -211,7 +279,6 @@ const HealthForm = () => {
             ))}
           </div>
 
-          {/* OTP Section */}
           {!otpSent ? (
             <button type="button" className="otp-button" onClick={handleSendOTP}>📨 Send OTP</button>
           ) : !otpVerified ? (
