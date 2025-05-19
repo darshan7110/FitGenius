@@ -1,5 +1,4 @@
-// HealthForm.jsx - Main UI for user search, form submission, and plan display
-
+// HealthForm.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './HealthForm.css';
@@ -12,6 +11,9 @@ const HealthForm = () => {
   const [notFound, setNotFound] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [otpInput, setOtpInput] = useState('');
 
   // Form data
   const [formData, setFormData] = useState({
@@ -20,19 +22,20 @@ const HealthForm = () => {
     foodPreferences: '', email: '', mobile: ''
   });
 
-  // Get selected plan from localStorage
   const [planSelected, setPlanSelected] = useState('');
   useEffect(() => {
     const storedPlan = localStorage.getItem('selectedPlan');
     if (storedPlan) setPlanSelected(storedPlan);
   }, []);
 
-  // Reset to initial state (search form)
   const resetToSearch = () => {
     setShowForm(false);
     setUser(null);
     setMobile('');
     setNotFound(false);
+    setOtpSent(false);
+    setOtpVerified(false);
+    setOtpInput('');
     setFormData({
       name: '', age: '', gender: '', weight: '', height: '',
       goal: '', activityLevel: '', healthConditions: '',
@@ -40,7 +43,6 @@ const HealthForm = () => {
     });
   };
 
-  // Search user by mobile number
   const handleSearchUser = async () => {
     if (!mobile.trim()) return;
     setLoading(true);
@@ -56,7 +58,6 @@ const HealthForm = () => {
     }
   };
 
-  // Validate user input
   const validateForm = () => {
     const nameRegex = /^[A-Za-z\s]+$/;
     if (!nameRegex.test(formData.name)) return 'Name should contain only letters';
@@ -71,15 +72,58 @@ const HealthForm = () => {
     if (!['Male', 'Female', 'Other'].includes(formData.gender)) return 'Invalid gender selected';
     if (!['Low', 'Moderate', 'Intense', 'Extreme'].includes(formData.activityLevel)) return 'Invalid activity level';
     if (!['Lose Weight', 'Gain Muscle', 'Make Body'].includes(formData.goal)) return 'Invalid goal';
+    if (!formData.email || !formData.email.includes('@')) return 'Enter a valid email';
     return null;
   };
 
-  // Submit new user and generate AI plan
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSendOTP = async () => {
     const validationError = validateForm();
     if (validationError) {
       alert(validationError);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await axios.post('https://fitgenius-production.up.railway.app/api/otp/send', {
+        email: formData.email
+      });
+      toast.success('📨 OTP sent to your email!');
+      setOtpSent(true);
+    } catch (err) {
+      console.error(err);
+      toast.error('❌ Failed to send OTP');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOTP = async () => {
+    if (!otpInput.trim()) {
+      alert('Please enter OTP');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await axios.post('https://fitgenius-production.up.railway.app/api/otp/verify', {
+        email: formData.email,
+        otp: otpInput
+      });
+      toast.success('✅ OTP verified!');
+      setOtpVerified(true);
+    } catch (err) {
+      console.error(err);
+      toast.error('❌ Invalid or expired OTP');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!otpVerified) {
+      toast.error('❌ Please verify OTP before submitting');
       return;
     }
 
@@ -100,11 +144,8 @@ const HealthForm = () => {
   return (
     <div className="health-form-container">
       <ToastContainer />
-
-      {/* Loader */}
       {loading && <div className="loader">Loading...</div>}
 
-      {/* Search UI */}
       {!user && !showForm && !loading && (
         <div className="health-form mb-6">
           <label htmlFor="mobile">Enter Phone Number</label>
@@ -116,7 +157,6 @@ const HealthForm = () => {
         </div>
       )}
 
-      {/* Existing user info */}
       {user && !loading && (
         <div className="user-details-container">
           <h2>✅ Existing User Plan</h2>
@@ -128,7 +168,6 @@ const HealthForm = () => {
               ))}
           </div>
 
-          {/* Plans */}
           <h3>🏋️‍♂️ Workout Plan</h3>
           <div className="plan-box-scroll">{user.workout?.content || 'No Workout Plan available.'}</div>
 
@@ -142,7 +181,6 @@ const HealthForm = () => {
         </div>
       )}
 
-      {/* New User Form */}
       {showForm && !loading && (
         <form onSubmit={handleSubmit} className="health-form-formatted">
           <h2>📝 New User Details*</h2>
@@ -174,8 +212,20 @@ const HealthForm = () => {
             ))}
           </div>
 
+          {/* OTP Section */}
+          {!otpSent ? (
+            <button type="button" className="otp-button" onClick={handleSendOTP}>📨 Send OTP</button>
+          ) : !otpVerified ? (
+            <div className="otp-section">
+              <input type="text" placeholder="Enter OTP" value={otpInput} onChange={e => setOtpInput(e.target.value)} />
+              <button type="button" className="verify-button" onClick={handleVerifyOTP}>✅ Verify OTP</button>
+            </div>
+          ) : (
+            <div className="otp-success">✅ OTP Verified</div>
+          )}
+
           <div className="form-actions">
-            <button type="submit">💾 Save User & Generate Plan</button>
+            <button type="submit" disabled={!otpVerified}>💾 Save User & Generate Plan</button>
             <button type="button" onClick={resetToSearch} className="cancel-button ml-3">❌ Cancel</button>
           </div>
         </form>
