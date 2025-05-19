@@ -1,16 +1,16 @@
-// routes/otpRoutes.js
+// OTP routes to send/verify OTPs for email validation
 import express from 'express';
 import nodemailer from 'nodemailer';
 
 const router = express.Router();
 
-// In-memory OTP store (temporary): { email: { otp, expiresAt } }
+// Store OTPs temporarily in memory (you can move this to Redis or DB later)
 const otpStore = {};
 
-// Helper: Generate 6-digit OTP
+// Generate random 6-digit OTP
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
-// Setup transporter using Gmail + environment variables
+// Configure mail sender
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Send OTP to user via email
+// Endpoint to send OTP to email
 router.post('/send', async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ message: 'Email is required' });
@@ -45,7 +45,7 @@ router.post('/send', async (req, res) => {
   }
 });
 
-// Verify OTP
+// Endpoint to verify submitted OTP
 router.post('/verify', (req, res) => {
   const { email, otp } = req.body;
   if (!email || !otp) return res.status(400).json({ message: 'Email and OTP required' });
@@ -61,8 +61,7 @@ router.post('/verify', (req, res) => {
 
   if (otp !== record.otp) return res.status(400).json({ message: 'Invalid OTP' });
 
-  // OTP verified
-  delete otpStore[email];
+  delete otpStore[email]; // OTP verified, clean up
   return res.status(200).json({ message: 'OTP verified' });
 });
 
