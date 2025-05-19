@@ -1,3 +1,5 @@
+// HealthForm.jsx - Main UI for user search, form submission, and plan display
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './HealthForm.css';
@@ -5,32 +7,27 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const HealthForm = () => {
-  // 📱 Mobile search input
   const [mobile, setMobile] = useState('');
-  // 👤 Existing user info
   const [user, setUser] = useState(null);
-  // ❌ Flag when user not found
   const [notFound, setNotFound] = useState(false);
-  // 📝 Show form toggle
   const [showForm, setShowForm] = useState(false);
-  // ⏳ Loading spinner flag
   const [loading, setLoading] = useState(false);
 
-  // 💾 Form data for new user
+  // Form data
   const [formData, setFormData] = useState({
     name: '', age: '', gender: '', weight: '', height: '',
     goal: '', activityLevel: '', healthConditions: '',
     foodPreferences: '', email: '', mobile: ''
   });
 
-  // 🧠 Plan selected from pricing page
+  // Get selected plan from localStorage
   const [planSelected, setPlanSelected] = useState('');
   useEffect(() => {
     const storedPlan = localStorage.getItem('selectedPlan');
     if (storedPlan) setPlanSelected(storedPlan);
   }, []);
 
-  // 🔄 Reset form to initial state
+  // Reset to initial state (search form)
   const resetToSearch = () => {
     setShowForm(false);
     setUser(null);
@@ -43,7 +40,7 @@ const HealthForm = () => {
     });
   };
 
-  // 🔍 Search user by mobile number
+  // Search user by mobile number
   const handleSearchUser = async () => {
     if (!mobile.trim()) return;
     setLoading(true);
@@ -59,7 +56,7 @@ const HealthForm = () => {
     }
   };
 
-  // ✅ Validate all form fields
+  // Validate user input
   const validateForm = () => {
     const nameRegex = /^[A-Za-z\s]+$/;
     if (!nameRegex.test(formData.name)) return 'Name should contain only letters';
@@ -70,14 +67,14 @@ const HealthForm = () => {
     const height = parseFloat(formData.height);
     if (isNaN(height) || height < 50 || height > 500) return 'Height must be between 50 and 500 cm';
     const mobileRegex = /^[6-9]\d{9}$/;
-    if (!mobileRegex.test(formData.mobile)) return 'Mobile number must be valid Indian number starting with 6-9';
+    if (!mobileRegex.test(formData.mobile)) return 'Mobile number must be a valid 10-digit Indian number starting with 6-9';
     if (!['Male', 'Female', 'Other'].includes(formData.gender)) return 'Invalid gender selected';
     if (!['Low', 'Moderate', 'Intense', 'Extreme'].includes(formData.activityLevel)) return 'Invalid activity level';
     if (!['Lose Weight', 'Gain Muscle', 'Make Body'].includes(formData.goal)) return 'Invalid goal';
     return null;
   };
 
-  // 💾 Submit new user and generate AI plan
+  // Submit new user and generate AI plan
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationError = validateForm();
@@ -103,58 +100,52 @@ const HealthForm = () => {
   return (
     <div className="health-form-container">
       <ToastContainer />
+
+      {/* Loader */}
       {loading && <div className="loader">Loading...</div>}
 
-      {/* Search section */}
+      {/* Search UI */}
       {!user && !showForm && !loading && (
         <div className="health-form mb-6">
-          <label htmlFor="mobile" className="block text-lg font-medium mb-2">Enter Phone Number</label>
-          <input
-            id="mobile"
-            value={mobile}
-            onChange={e => setMobile(e.target.value)}
-            placeholder="Enter mobile number"
-          />
-          <button onClick={handleSearchUser} className="mt-3">🔍 Search User</button>
-          <button onClick={() => setShowForm(true)} className="mt-3">➕ Add New User</button>
+          <label htmlFor="mobile">Enter Phone Number</label>
+          <input id="mobile" value={mobile} onChange={e => setMobile(e.target.value)} placeholder="Enter mobile number" />
+          <button onClick={handleSearchUser}>🔍 Search User</button>
+          <button onClick={() => setShowForm(true)}>➕ Add New User</button>
           {notFound && <div className="text-red-400 mt-2">❌ User not found.</div>}
           <button className="home-button" onClick={() => window.location.href = '/'}>🏠 Home Page</button>
         </div>
       )}
 
-      {/* Display user info and plans */}
+      {/* Existing user info */}
       {user && !loading && (
         <div className="user-details-container">
-          <h2 className="user-details-title">✅ Existing User Plan</h2>
+          <h2>✅ Existing User Plan</h2>
           <div className="user-details-grid">
             {Object.entries(user)
               .filter(([key]) => !['_id', '_v', 'planSelected', 'diet', 'workout', 'goalPlan'].includes(key))
               .map(([key, val]) => (
-                <div key={key}>
-                  <strong>{key.replace(/([A-Z])/g, ' $1')}:</strong> {val || 'N/A'}
-                </div>
+                <div key={key}><strong>{key.replace(/([A-Z])/g, ' $1')}:</strong> {val || 'N/A'}</div>
               ))}
           </div>
 
-          <div className="ai-plan-section">
-            <h3 className="font-bold mt-4">🏋️‍♂️ Workout Plan</h3>
-            <div className="plan-box-scroll">{user.workout?.content || 'No Workout Plan available.'}</div>
+          {/* Plans */}
+          <h3>🏋️‍♂️ Workout Plan</h3>
+          <div className="plan-box-scroll">{user.workout?.content || 'No Workout Plan available.'}</div>
 
-            <h3 className="font-bold mt-4">🥗 Diet Plan</h3>
-            <div className="plan-box-scroll">{user.diet?.content || 'No Diet Plan available.'}</div>
+          <h3>🥗 Diet Plan</h3>
+          <div className="plan-box-scroll">{user.diet?.content || 'No Diet Plan available.'}</div>
 
-            <h3 className="font-bold mt-4">🎯 Goal Plan</h3>
-            <div className="plan-box-scroll">{user.goalPlan?.content || 'No Goal Plan available.'}</div>
-          </div>
+          <h3>🎯 Goal Plan</h3>
+          <div className="plan-box-scroll">{user.goalPlan?.content || 'No Goal Plan available.'}</div>
 
-          <button onClick={resetToSearch} className="back-button mt-4">🔙 Back to Search</button>
+          <button onClick={resetToSearch} className="back-button">🔙 Back to Search</button>
         </div>
       )}
 
-      {/* New user form */}
+      {/* New User Form */}
       {showForm && !loading && (
         <form onSubmit={handleSubmit} className="health-form-formatted">
-          <h2 className="form-heading">📝 New User Details*</h2>
+          <h2>📝 New User Details*</h2>
           <div className="form-grid">
             {[
               ['Name', 'name'],
@@ -170,21 +161,21 @@ const HealthForm = () => {
               ['Email', 'email', 'email']
             ].map(([label, key, type = 'text', options]) => (
               <div className="form-group" key={key}>
-                <label className="form-label">{label} *</label>
+                <label>{label} *</label>
                 {type === 'select' ? (
-                  <select className="form-input" value={formData[key]} onChange={e => setFormData({ ...formData, [key]: e.target.value })}>
+                  <select value={formData[key]} onChange={e => setFormData({ ...formData, [key]: e.target.value })}>
                     <option value="">Select</option>
                     {options.map(option => <option key={option}>{option}</option>)}
                   </select>
                 ) : (
-                  <input type={type} className="form-input" value={formData[key]} onChange={e => setFormData({ ...formData, [key]: e.target.value })} />
+                  <input type={type} value={formData[key]} onChange={e => setFormData({ ...formData, [key]: e.target.value })} />
                 )}
               </div>
             ))}
           </div>
 
           <div className="form-actions">
-            <button type="submit" className="submit-button">💾 Save User & Generate Plan</button>
+            <button type="submit">💾 Save User & Generate Plan</button>
             <button type="button" onClick={resetToSearch} className="cancel-button ml-3">❌ Cancel</button>
           </div>
         </form>
