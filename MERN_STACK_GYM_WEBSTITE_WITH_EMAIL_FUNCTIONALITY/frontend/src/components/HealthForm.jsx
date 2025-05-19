@@ -1,4 +1,3 @@
-// HealthForm.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './HealthForm.css';
@@ -28,7 +27,6 @@ const HealthForm = () => {
       setUserEmail(res.data.email);
       setNotFound(false);
 
-      // Send OTP to user's email
       await axios.post('https://fitgenius-production.up.railway.app/api/otp/send', {
         email: res.data.email,
       });
@@ -93,8 +91,19 @@ const HealthForm = () => {
             placeholder="Enter mobile number"
           />
           <button onClick={handleSearchAndSendOTP}>🔍 Search & Send OTP</button>
-          {notFound && <div className="text-red-400 mt-2">❌ User not found.</div>}
-          <button className="home-button" onClick={() => window.location.href = '/'}>🏠 Home Page</button>
+
+          {notFound && (
+            <>
+              <div className="text-red-400 mt-2">❌ User not found.</div>
+              <button className="add-user-button" onClick={() => window.location.href = '/add-user'}>
+                ➕ Add New User
+              </button>
+            </>
+          )}
+
+          <button className="home-button" onClick={() => window.location.href = '/'}>
+            🏠 Home Page
+          </button>
         </div>
       )}
 
