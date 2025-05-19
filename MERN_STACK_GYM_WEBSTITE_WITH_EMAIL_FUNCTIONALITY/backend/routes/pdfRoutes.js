@@ -1,49 +1,56 @@
-const express = require('express');
-const PDFDocument = require('pdfkit');
+// routes/pdfRoutes.js
+import express from 'express';
+import PDFDocument from 'pdfkit';
+import User from '../models/User.js'; // Adjust path as needed
+
 const router = express.Router();
-const User = require('../models/User'); // Adjust to your User model path
 
 router.get('/generate/:mobile', async (req, res) => {
     try {
         const { mobile } = req.params;
         
-        // 1. Fetch user data
+        // Fetch user data
         const user = await User.findOne({ mobileNumber: mobile });
         if (!user) return res.status(404).send('User not found');
         
-        // 2. Create PDF
+        // Create PDF
         const doc = new PDFDocument();
         
-        // 3. Set response headers for download
+        // Set response headers
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=FitGenius_${mobile}.pdf`);
         
-        // 4. Pipe PDF to response
+        // Pipe PDF to response
         doc.pipe(res);
         
-        // 5. Add content to PDF
+        // Add content
         doc.fontSize(20).text('FitGenius Health Report', { align: 'center' });
-        doc.moveDown(0.5);
+        doc.moveDown();
         
+        // Add user details
         doc.fontSize(14).text(`Name: ${user.name || 'N/A'}`);
         doc.text(`Mobile: ${mobile}`);
-        doc.moveDown(1);
+        doc.moveDown();
         
-        doc.fontSize(16).text('Health Metrics', { underline: true });
-        doc.moveDown(0.5);
+        // Add health data
+        doc.fontSize(16).text('Health Metrics:', { underline: true });
+        doc.moveDown();
         
-        // Add health data (modify according to your schema)
         if (user.healthData) {
-            doc.fontSize(12);
             for (const [key, value] of Object.entries(user.healthData)) {
                 doc.text(`${key}: ${value}`);
             }
         }
         
-        doc.moveDown(1);
-        doc.fontSize(10).text(`Report generated on: ${new Date().toLocaleString()}`);
+        // Add plans if available
+        if (user.workout?.content) {
+            doc.addPage();
+            doc.fontSize(16).text('Workout Plan:', { underline: true });
+            doc.moveDown();
+            doc.text(user.workout.content);
+        }
         
-        // 6. Finalize PDF
+        // Finalize
         doc.end();
         
     } catch (error) {
@@ -52,4 +59,4 @@ router.get('/generate/:mobile', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
