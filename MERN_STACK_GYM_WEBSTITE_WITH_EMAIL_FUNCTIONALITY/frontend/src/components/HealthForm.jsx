@@ -1,4 +1,3 @@
-// HealthForm.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './HealthForm.css';
@@ -12,6 +11,7 @@ const HealthForm = () => {
   const [notFound, setNotFound] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
 
   const [otpSentSearch, setOtpSentSearch] = useState(false);
   const [otpVerifiedSearch, setOtpVerifiedSearch] = useState(false);
@@ -33,6 +33,40 @@ const HealthForm = () => {
     const storedPlan = localStorage.getItem('selectedPlan');
     if (storedPlan) setPlanSelected(storedPlan);
   }, []);
+
+  // PDF Download Handler
+  const handleDownloadPDF = async () => {
+    setPdfLoading(true);
+    try {
+      const response = await axios.get(
+        `https://fitgenius-production.up.railway.app/api/pdf/generate/${mobile}`,
+        {
+          responseType: 'blob',
+          timeout: 25000
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `FitGenius_Report_${mobile}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 100);
+
+      toast.success('PDF downloaded successfully!');
+    } catch (error) {
+      console.error('Download failed:', error);
+      toast.error('Failed to download PDF. Please try again.');
+    } finally {
+      setPdfLoading(false);
+    }
+  };
 
   const resetToSearch = () => {
     setShowForm(false);
@@ -214,8 +248,14 @@ const HealthForm = () => {
         <div className="user-details-container">
           <h2>✅ Existing User Plan</h2>
           <div className="flex justify-end mb-4">
-            <DownloadPDFButton mobileNumber={mobile} />
-        </div>
+            <button 
+              onClick={handleDownloadPDF}
+              disabled={pdfLoading}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition"
+            >
+              {pdfLoading ? 'Generating PDF...' : 'Download PDF Report'}
+            </button>
+          </div>
           <div className="user-details-grid">
             {Object.entries(user)
               .filter(([key]) => !['_id', '_v', 'planSelected', 'diet', 'workout', 'goalPlan'].includes(key))
