@@ -11,6 +11,9 @@ import healthFormRoutes from "./routes/healthData.js";
 import visitRoutes from "./routes/visit.js";
 import aiRoutes from "./routes/ai.js";
 import otpRoutes from "./routes/otpRoutes.js"; // OTP routes
+const pdfRoutes = require('./routes/pdfRoutes');
+
+
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -34,6 +37,7 @@ app.use("/api/visit", visitRoutes);
 app.use("/api/healthdata", healthFormRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/otp", otpRoutes);
+app.use('/api/pdf', pdfRoutes);
 
 app.post("/send/mail", async (req, res) => {
   const { name, email, message } = req.body;

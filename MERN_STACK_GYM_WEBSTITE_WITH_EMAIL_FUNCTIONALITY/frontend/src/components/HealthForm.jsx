@@ -213,6 +213,9 @@ const HealthForm = () => {
       {user && otpVerifiedSearch && !loading && (
         <div className="user-details-container">
           <h2>✅ Existing User Plan</h2>
+          <div className="flex justify-end mb-4">
+            <DownloadPDFButton mobileNumber={mobile} />
+        </div>
           <div className="user-details-grid">
             {Object.entries(user)
               .filter(([key]) => !['_id', '_v', 'planSelected', 'diet', 'workout', 'goalPlan'].includes(key))
