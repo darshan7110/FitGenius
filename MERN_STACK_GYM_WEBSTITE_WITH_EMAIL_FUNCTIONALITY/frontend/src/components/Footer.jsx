@@ -1,11 +1,15 @@
-import React from 'react'
+// ===== IMPORTING REACT =====
+import React from 'react';
 
+// ===== FOOTER COMPONENT =====
 const Footer = () => {
   return (
+    // ---- SITE FOOTER CONTENT ----
     <footer>
-        ©️ "More Than a Gym – A Lifestyle." 
+        ©️ "More Than a Gym – A Lifestyle."  {/* Motivational gym footer text */}
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+// ===== EXPORTING FOOTER COMPONENT =====
+export default Footer;

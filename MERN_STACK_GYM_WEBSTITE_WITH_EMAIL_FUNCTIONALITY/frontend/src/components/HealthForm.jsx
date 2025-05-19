@@ -47,6 +47,7 @@ const HealthForm = () => {
     if (!mobile.trim()) return;
     setLoading(true);
     try {
+      // Fix: Added backticks for string interpolation
       const res = await axios.get(`https://fitgenius-production.up.railway.app/api/healthdata/${mobile}`);
       setUser(res.data);
       setNotFound(false);
@@ -85,7 +86,7 @@ const HealthForm = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post('https://fitgenius-production.up.railway.app/api/otp/send', {
+      await axios.post('https://fitgenius-production.up.railway.app/api/otp/send', {
         email: formData.email
       });
       toast.success('📨 OTP sent to your email!');
@@ -106,7 +107,7 @@ const HealthForm = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post('https://fitgenius-production.up.railway.app/api/otp/verify', {
+      await axios.post('https://fitgenius-production.up.railway.app/api/otp/verify', {
         email: formData.email,
         otp: otpInput
       });
@@ -130,7 +131,7 @@ const HealthForm = () => {
     setLoading(true);
     try {
       const fullData = { ...formData, planSelected };
-      await axios.post(`https://fitgenius-production.up.railway.app/api/healthdata`, fullData);
+      await axios.post('https://fitgenius-production.up.railway.app/api/healthdata', fullData);
       toast.success('✅ User saved and plan generated successfully!');
       resetToSearch();
     } catch (err) {
@@ -149,7 +150,12 @@ const HealthForm = () => {
       {!user && !showForm && !loading && (
         <div className="health-form mb-6">
           <label htmlFor="mobile">Enter Phone Number</label>
-          <input id="mobile" value={mobile} onChange={e => setMobile(e.target.value)} placeholder="Enter mobile number" />
+          <input
+            id="mobile"
+            value={mobile}
+            onChange={e => setMobile(e.target.value)}
+            placeholder="Enter mobile number"
+          />
           <button onClick={handleSearchUser}>🔍 Search User</button>
           <button onClick={() => setShowForm(true)}>➕ Add New User</button>
           {notFound && <div className="text-red-400 mt-2">❌ User not found.</div>}
@@ -162,7 +168,7 @@ const HealthForm = () => {
           <h2>✅ Existing User Plan</h2>
           <div className="user-details-grid">
             {Object.entries(user)
-              .filter(([key]) => !['_id', '_v', 'planSelected', 'diet', 'workout', 'goalPlan'].includes(key))
+              .filter(([key]) => !['_id', '__v', 'planSelected', 'diet', 'workout', 'goalPlan'].includes(key))
               .map(([key, val]) => (
                 <div key={key}><strong>{key.replace(/([A-Z])/g, ' $1')}:</strong> {val || 'N/A'}</div>
               ))}
@@ -206,7 +212,11 @@ const HealthForm = () => {
                     {options.map(option => <option key={option}>{option}</option>)}
                   </select>
                 ) : (
-                  <input type={type} value={formData[key]} onChange={e => setFormData({ ...formData, [key]: e.target.value })} />
+                  <input
+                    type={type}
+                    value={formData[key]}
+                    onChange={e => setFormData({ ...formData, [key]: e.target.value })}
+                  />
                 )}
               </div>
             ))}
@@ -217,7 +227,12 @@ const HealthForm = () => {
             <button type="button" className="otp-button" onClick={handleSendOTP}>📨 Send OTP</button>
           ) : !otpVerified ? (
             <div className="otp-section">
-              <input type="text" placeholder="Enter OTP" value={otpInput} onChange={e => setOtpInput(e.target.value)} />
+              <input
+                type="text"
+                placeholder="Enter OTP"
+                value={otpInput}
+                onChange={e => setOtpInput(e.target.value)}
+              />
               <button type="button" className="verify-button" onClick={handleVerifyOTP}>✅ Verify OTP</button>
             </div>
           ) : (
