@@ -1,7 +1,7 @@
 // routes/pdfRoutes.js
 import express from 'express';
 import PDFDocument from 'pdfkit';
-import User from '../models/User.js'; // Adjust path as needed
+import User from '../models/Visit'; 
 
 const router = express.Router();
 
