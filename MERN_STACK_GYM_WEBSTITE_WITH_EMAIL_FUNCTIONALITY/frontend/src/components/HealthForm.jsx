@@ -39,13 +39,15 @@ const HealthForm = () => {
     setUser(null);
     setMobile('');
     setNotFound(false);
-    setOtpSent(false);
-    setOtpVerified(false);
-    setOtpInput('');
+    // Reset search OTP states
     setOtpSentSearch(false);
     setOtpVerifiedSearch(false);
     setOtpInputSearch('');
     setSearchEmail('');
+    // Reset new user OTP states and form
+    setOtpSent(false);
+    setOtpVerified(false);
+    setOtpInput('');
     setFormData({
       name: '', age: '', gender: '', weight: '', height: '',
       goal: '', activityLevel: '', healthConditions: '',
@@ -53,6 +55,7 @@ const HealthForm = () => {
     });
   };
 
+  // SEND OTP for Search with Resend support
   const handleSendSearchOTP = async () => {
     if (!searchEmail.includes('@')) {
       toast.error('❌ Please enter a valid email to receive OTP');
@@ -73,6 +76,7 @@ const HealthForm = () => {
     }
   };
 
+  // VERIFY OTP for Search
   const handleVerifySearchOTP = async () => {
     if (!otpInputSearch.trim()) {
       toast.error('❌ Please enter OTP');
@@ -94,13 +98,16 @@ const HealthForm = () => {
     }
   };
 
+  // SEARCH USER only if OTP verified for Search
   const handleSearchUser = async () => {
-    if (!mobile.trim()) return;
+    if (!mobile.trim()) {
+      toast.error('❌ Please enter mobile number');
+      return;
+    }
     if (!otpVerifiedSearch) {
       toast.error('❌ Please verify OTP before searching');
       return;
     }
-
     setLoading(true);
     try {
       const res = await axios.get(`https://fitgenius-production.up.railway.app/api/healthdata/${mobile}`);
@@ -114,6 +121,7 @@ const HealthForm = () => {
     }
   };
 
+  // VALIDATE new user form
   const validateForm = () => {
     const nameRegex = /^[A-Za-z\s]+$/;
     if (!nameRegex.test(formData.name)) return 'Name should contain only letters';
@@ -132,13 +140,13 @@ const HealthForm = () => {
     return null;
   };
 
+  // SEND OTP for New User (with resend support)
   const handleSendOTP = async () => {
     const validationError = validateForm();
     if (validationError) {
       toast.error(validationError);
       return;
     }
-
     setLoading(true);
     try {
       await axios.post('https://fitgenius-production.up.railway.app/api/otp/send', {
@@ -154,12 +162,12 @@ const HealthForm = () => {
     }
   };
 
+  // VERIFY OTP for New User
   const handleVerifyOTP = async () => {
     if (!otpInput.trim()) {
       toast.error('Please enter OTP');
       return;
     }
-
     setLoading(true);
     try {
       await axios.post('https://fitgenius-production.up.railway.app/api/otp/verify', {
@@ -176,13 +184,13 @@ const HealthForm = () => {
     }
   };
 
+  // SUBMIT New User Data
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!otpVerified) {
       toast.error('❌ Please verify OTP before submitting');
       return;
     }
-
     setLoading(true);
     try {
       const fullData = { ...formData, planSelected };
@@ -202,32 +210,65 @@ const HealthForm = () => {
       <ToastContainer />
       {loading && <div className="loader">Loading...</div>}
 
+      {/* SEARCH USER SECTION */}
       {!user && !showForm && !loading && (
         <div className="health-form mb-6">
           <label htmlFor="mobile">Enter Phone Number</label>
-          <input id="mobile" value={mobile} onChange={e => setMobile(e.target.value)} placeholder="Enter mobile number" />
-          <input type="email" placeholder="Enter email for OTP" value={searchEmail} onChange={(e) => setSearchEmail(e.target.value)} />
+          <input
+            id="mobile"
+            value={mobile}
+            onChange={e => setMobile(e.target.value)}
+            placeholder="Enter mobile number"
+            disabled={otpVerifiedSearch} // disable mobile input after OTP verified
+          />
+
+          <input
+            type="email"
+            placeholder="Enter email for OTP"
+            value={searchEmail}
+            onChange={(e) => setSearchEmail(e.target.value)}
+            disabled={otpVerifiedSearch} // disable email input after OTP verified
+          />
+
+          {/* Send OTP or Resend OTP */}
           {!otpSentSearch ? (
             <button type="button" onClick={handleSendSearchOTP}>📨 Send OTP</button>
           ) : !otpVerifiedSearch ? (
             <div className="otp-section">
-              <input type="text" placeholder="Enter OTP" value={otpInputSearch} onChange={(e) => setOtpInputSearch(e.target.value)} />
+              <input
+                type="text"
+                placeholder="Enter OTP"
+                value={otpInputSearch}
+                onChange={(e) => setOtpInputSearch(e.target.value)}
+              />
               <button onClick={handleVerifySearchOTP}>✅ Verify OTP</button>
+              <button onClick={handleSendSearchOTP}>🔄 Resend OTP</button> {/* Resend button added */}
               <button onClick={() => {
+                // BACK button resets OTP and email/mobile inputs for search
                 setOtpSentSearch(false);
                 setOtpInputSearch('');
+                setSearchEmail('');
+                setOtpVerifiedSearch(false);
+                setMobile('');
               }}>🔙 Back</button>
             </div>
           ) : (
             <div className="otp-success">✅ OTP Verified</div>
           )}
-          <button onClick={handleSearchUser}>🔍 Search User</button>
-          <button onClick={() => setShowForm(true)}>➕ Add New User</button>
+
+          <button onClick={handleSearchUser} disabled={!otpVerifiedSearch}>🔍 Search User</button>
+          <button onClick={() => {
+            resetToSearch();
+            setShowForm(true);
+          }}>➕ Add New User</button>
+
           {notFound && <div className="text-red-400 mt-2">❌ User not found.</div>}
+
           <button className="home-button" onClick={() => window.location.href = '/'}>🏠 Home Page</button>
         </div>
       )}
 
+      {/* DISPLAY EXISTING USER DETAILS */}
       {user && !loading && (
         <div className="user-details-container">
           <h2>✅ Existing User Plan</h2>
@@ -244,49 +285,79 @@ const HealthForm = () => {
           <div className="plan-box-scroll">{user.diet?.content || 'No Diet Plan available.'}</div>
           <h3>🎯 Goal Plan</h3>
           <div className="plan-box-scroll">{user.goalPlan?.content || 'No Goal Plan available.'}</div>
-          <button onClick={resetToSearch} className="back-button">🔙 Back to Search</button>
+          <button onClick={() => resetToSearch()}>🔙 Back</button>
         </div>
       )}
 
-      {showForm && !loading && (
-        <form onSubmit={handleSubmit} className="health-form-formatted">
-          <h2>📝 New User Details*</h2>
-          <div className="form-grid">
-            {[
-              ['Name', 'name'],
-              ['Age', 'age', 'number'],
-              ['Gender', 'gender', 'select', ['Male', 'Female', 'Other']],
-              ['Weight (kg)', 'weight', 'number'],
-              ['Height (cm)', 'height', 'number'],
-              ['Activity Level', 'activityLevel', 'select', ['Low', 'Moderate', 'Intense', 'Extreme']],
-              ['Goal', 'goal', 'select', ['Lose Weight', 'Gain Muscle', 'Make Body']],
-              ['Health Conditions', 'healthConditions'],
-              ['Food Preferences', 'foodPreferences'],
-              ['Mobile Number', 'mobile'],
-              ['Email', 'email', 'email']
-            ].map(([label, key, type = 'text', options]) => (
-              <div className="form-group" key={key}>
-                <label>{label} *</label>
-                {type === 'select' ? (
-                  <select value={formData[key]} onChange={e => setFormData({ ...formData, [key]: e.target.value })}>
-                    <option value="">Select</option>
-                    {options.map(option => <option key={option}>{option}</option>)}
-                  </select>
-                ) : (
-                  <input type={type} value={formData[key]} onChange={e => setFormData({ ...formData, [key]: e.target.value })} />
-                )}
-              </div>
-            ))}
-          </div>
+      {/* NEW USER FORM SECTION */}
+      {showForm && (
+        <form className="health-form" onSubmit={handleSubmit}>
+          <h2>Add New User</h2>
+          {/* Input fields */}
+          <input
+            type="text" placeholder="Name" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })}
+            disabled={otpVerified}
+          />
+          <input
+            type="number" placeholder="Age" value={formData.age} onChange={e => setFormData({ ...formData, age: e.target.value })}
+            disabled={otpVerified}
+          />
+          <select value={formData.gender} onChange={e => setFormData({ ...formData, gender: e.target.value })} disabled={otpVerified}>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option>
+          </select>
+          <input
+            type="number" placeholder="Weight (kg)" value={formData.weight} onChange={e => setFormData({ ...formData, weight: e.target.value })}
+            disabled={otpVerified}
+          />
+          <input
+            type="number" placeholder="Height (cm)" value={formData.height} onChange={e => setFormData({ ...formData, height: e.target.value })}
+            disabled={otpVerified}
+          />
+          <select value={formData.goal} onChange={e => setFormData({ ...formData, goal: e.target.value })} disabled={otpVerified}>
+            <option value="">Select Goal</option>
+            <option value="Lose Weight">Lose Weight</option>
+            <option value="Gain Muscle">Gain Muscle</option>
+            <option value="Make Body">Make Body</option>
+          </select>
+          <select value={formData.activityLevel} onChange={e => setFormData({ ...formData, activityLevel: e.target.value })} disabled={otpVerified}>
+            <option value="">Select Activity Level</option>
+            <option value="Low">Low</option><option value="Moderate">Moderate</option><option value="Intense">Intense</option><option value="Extreme">Extreme</option>
+          </select>
+          <input
+            type="text" placeholder="Health Conditions (optional)" value={formData.healthConditions} onChange={e => setFormData({ ...formData, healthConditions: e.target.value })}
+            disabled={otpVerified}
+          />
+          <input
+            type="text" placeholder="Food Preferences (optional)" value={formData.foodPreferences} onChange={e => setFormData({ ...formData, foodPreferences: e.target.value })}
+            disabled={otpVerified}
+          />
+          <input
+            type="email" placeholder="Email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })}
+            disabled={otpVerified}
+          />
+          <input
+            type="text" placeholder="Mobile" value={formData.mobile} onChange={e => setFormData({ ...formData, mobile: e.target.value })}
+            disabled={otpVerified}
+          />
 
+          {/* OTP Section for new user */}
           {!otpSent ? (
-            <button type="button" className="otp-button" onClick={handleSendOTP}>📨 Send OTP</button>
+            <button type="button" onClick={handleSendOTP}>📨 Send OTP</button>
           ) : !otpVerified ? (
             <div className="otp-section">
-              <input type="text" placeholder="Enter OTP" value={otpInput} onChange={e => setOtpInput(e.target.value)} />
-              <button type="button" className="verify-button" onClick={handleVerifyOTP}>✅ Verify OTP</button>
-              <button type="button" className="cancel-button mt-2" onClick={() => {
+              <input
+                type="text"
+                placeholder="Enter OTP"
+                value={otpInput}
+                onChange={(e) => setOtpInput(e.target.value)}
+              />
+              <button type="button" onClick={handleVerifyOTP}>✅ Verify OTP</button>
+              <button type="button" onClick={handleSendOTP}>🔄 Resend OTP</button> {/* Resend button */}
+              <button type="button" onClick={() => {
+                // Back button resets OTP and allows editing form again
                 setOtpSent(false);
+                setOtpVerified(false);
                 setOtpInput('');
               }}>🔙 Back</button>
             </div>
@@ -294,10 +365,11 @@ const HealthForm = () => {
             <div className="otp-success">✅ OTP Verified</div>
           )}
 
-          <div className="form-actions">
-            <button type="submit" disabled={!otpVerified}>💾 Save User & Generate Plan</button>
-            <button type="button" onClick={resetToSearch} className="cancel-button ml-3">❌ Cancel</button>
-          </div>
+          <button type="submit" disabled={!otpVerified}>Submit</button>
+          <button type="button" onClick={() => {
+            setShowForm(false);
+            resetToSearch();
+          }}>🔙 Back</button>
         </form>
       )}
     </div>
