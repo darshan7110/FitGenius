@@ -1,0 +1,68 @@
+<svg width="400" height="400" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="25%" stop-color="#ff00ff"/>
+      <stop offset="50%" stop-color="#ff007f"/>
+      <stop offset="75%" stop-color="#ffff00"/>
+      <stop offset="100%" stop-color="#00ff00"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g filter="url(#glow)" stroke="url(#neonGradient)" stroke-width="36" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    
+    <!-- Italic and modern F -->
+    <path d="
+      M180,250 
+      Q200,170 280,170 
+      H460 
+      Q480,170 480,210 
+      Q480,250 440,250 
+      H300 
+      Q280,250 280,280 
+      Q280,310 310,310 
+      H420 
+      Q440,310 440,350 
+      Q440,390 410,390 
+      H310 
+      Q280,390 280,420 
+      V510 
+      Q280,580 230,580 
+      Q190,580 180,510 
+      Z"/>
+
+    <!-- Bold G with emphasized round form -->
+    <path d="
+      M580,250 
+      Q500,250 500,340 
+      V480 
+      Q500,570 580,570 
+      H700 
+      Q780,570 780,480 
+      V430 
+      Q780,400 740,400 
+      H620 
+      Q600,400 600,430 
+      Q600,460 620,460 
+      H740 
+      V480 
+      Q740,520 700,520 
+      H580 
+      Q540,520 540,480 
+      V340 
+      Q540,300 580,300 
+      H740 
+      Q780,300 780,260 
+      Q780,220 740,220 
+      H580 
+      Q500,220 500,250 
+      Z"/>
+  </g>
+</svg>
