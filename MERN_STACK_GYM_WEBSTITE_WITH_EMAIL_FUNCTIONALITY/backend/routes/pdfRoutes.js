@@ -11,7 +11,6 @@ router.get('/generate/:mobile', async (req, res) => {
         
         // Fetch user data
         const user = await User.findOne({ mobileNumber: mobile });
-        console.log(user)
         if (!user) return res.status(404).send('User not found');
         
         // Create PDF
