@@ -16,7 +16,7 @@ const Pricing = () => {
     },
     {
       imgUrl: "/pricing.jpg",
-      title: "HEAL_YEARLY",   // Slightly customized yearly health plan
+      title: "HALF YEARLY",   // Slightly customized yearly health plan
       price: 34000,
       length: 6,
     },
