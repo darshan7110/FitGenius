@@ -85,3 +85,91 @@
     display: flex; /* Show hamburger on small screens */
   }
 }
+/* Input and select fields styling */
+.form-container input,
+.form-container select {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  background: #1b1b1b;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.15);
+}
+
+.form-container input:focus,
+.form-container select:focus {
+  border: 1px solid #00ffff;
+  box-shadow: 0 0 5px 2px #00ffff88;
+  outline: none;
+}
+
+/* OTP Section */
+.otp-section {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+/* OTP Input box */
+.otp-input {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  font-size: 1rem;
+  box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.15);
+}
+
+.otp-input:focus {
+  border-color: #00ffff;
+  box-shadow: 0 0 6px 2px #00ffff80;
+}
+
+/* Send OTP & Verify Buttons */
+.btn-otp,
+.btn-verify {
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  font-size: 0.95rem;
+  cursor: pointer;
+  background: linear-gradient(90deg, #00d2ff, #3a47d5);
+  color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+.btn-otp:hover,
+.btn-verify:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px #00ffffaa;
+}
+
+/* Disabled state */
+.btn-otp:disabled,
+.btn-verify:disabled {
+  background: #333;
+  color: #999;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Responsive fix for small screens */
+@media (max-width: 500px) {
+  .otp-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-otp,
+  .btn-verify {
+    width: 100%;
+  }
+}

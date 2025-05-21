@@ -259,10 +259,11 @@ const HealthForm = () => {
             <input 
               type="text" 
               placeholder="Enter OTP" 
+              className="otp-input"
               value={otpInputSearch} 
               onChange={(e) => updateState({ otpInputSearch: e.target.value })} 
             />
-            <button onClick={() => handleVerifyOTP('search')}>✅ Verify OTP</button>
+            <button onClick={() => handleVerifyOTP('search')}  >✅ Verify OTP</button>
             <button onClick={() => {
               updateState({
                 otpSentSearch: false,
