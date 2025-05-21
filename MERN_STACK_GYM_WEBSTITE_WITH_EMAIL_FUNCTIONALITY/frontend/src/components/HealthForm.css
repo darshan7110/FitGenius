@@ -699,3 +699,100 @@ button {
   margin-top: 1.5rem;
   margin-bottom: 1rem;
 }
+
+/* Outer form container */
+.form-container {
+  max-width: 900px;
+  margin: 4rem auto;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: #111; /* solid dark */
+  box-shadow: 0 8px 30px rgba(0, 255, 255, 0.2); /* neon glow */
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Form title */
+.form-container h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #ff6b6b;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Grid layout for fields */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem 2rem;
+}
+
+/* Inputs & selects */
+.form-container input,
+.form-container select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.5rem;
+  border: none;
+  outline: none;
+  background: #1e1e1e;
+  color: #fff;
+  font-size: 1rem;
+  box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.form-container input:focus,
+.form-container select:focus {
+  box-shadow: 0 0 5px 2px #00ffff;
+}
+
+/* Buttons */
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.form-buttons button {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-submit {
+  background: linear-gradient(90deg, #00d2ff, #3a47d5);
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+}
+
+.btn-submit:disabled {
+  background: #333;
+  color: #999;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-cancel {
+  background: #ff4d4d;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background: #e60000;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .form-buttons {
+    flex-direction: column;
+  }
+}
