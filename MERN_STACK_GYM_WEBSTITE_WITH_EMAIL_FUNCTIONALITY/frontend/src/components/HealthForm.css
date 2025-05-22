@@ -888,9 +888,9 @@ button {
 /* Base form styles */
 form {
   max-width: 600px;
-  margin: auto;
+  /* margin: auto; */
   padding: 2rem;
-  background: #ffffff;
+  /* background: #ffffff; */
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
