@@ -581,7 +581,7 @@ button {
 }
 
 /* --- FORM FIELDS --- */
-.health-form input,
+/* .health-form input,
 .health-form select,
 .health-form textarea {
   width: 100%;
@@ -601,7 +601,7 @@ button {
   background: #2a2a2a;
   box-shadow: 0 0 12px rgba(0, 217, 255, 0.5);
   transform: scale(1.02);
-}
+} */
 
 /* --- BUTTONS --- */
 .health-form button {
@@ -734,7 +734,7 @@ button {
 }
 
 /* Inputs & selects */
-.form-container input,
+/* .form-container input,
 .form-container select {
   width: 100%;
   border-radius: 0.5rem;
@@ -750,7 +750,7 @@ button {
 .form-container input:focus,
 .form-container select:focus {
   box-shadow: 0 0 5px 2px #00ffff;
-}
+} */
 
 /* Buttons */
 .form-buttons {
@@ -800,7 +800,7 @@ button {
   }
 }
 /* Input and select fields styling */
-.form-container input,
+/* .form-container input,
 .form-container select {
   width: 100%;
   border-radius: 0.5rem;
@@ -810,7 +810,7 @@ button {
   font-size: 1rem;
   transition: all 0.3s ease;
   box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.15);
-}
+} */
 
 .form-container input:focus,
 .form-container select:focus {
@@ -830,8 +830,8 @@ button {
 /* OTP Input box */
 .otp-input {
   flex: 1;
-  padding: 0.6rem;
-  border-radius: 0.5rem;
+  padding: 0.8rem;
+  border-radius: 0.9rem;
   background-color: #1e1e1e;
   color: #fff;
   border: 1px solid rgba(0, 255, 255, 0.3);
