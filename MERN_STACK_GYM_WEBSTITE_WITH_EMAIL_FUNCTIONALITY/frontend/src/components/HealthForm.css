@@ -266,6 +266,7 @@
 
 .form-group {
   display: flex;
+  background-color: #000;
   flex-direction: column;
 }
 
