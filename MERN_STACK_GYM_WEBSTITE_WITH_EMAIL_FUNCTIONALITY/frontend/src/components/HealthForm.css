@@ -2,14 +2,14 @@
    Global Container
 ---------------------------------- */
 .health-form-container {
-  max-width: 800px;
-  margin: 50px auto;
-  padding: 30px;
-  background: linear-gradient(to right, #f5f7fa, #c3cfe2);
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  animation: fadeIn 1s ease-in-out;
+  color: #ffffff;
 }
 
 /* ----------------------------------
@@ -30,9 +30,9 @@
 
 .health-form h2 {
   text-align: center;
-  margin-bottom: 25px;
-  color: #2c3e50;
-  font-size: 2em;
+  color: #00d9ff;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 5px #00d9ff;
 }
 
 /* ----------------------------------
