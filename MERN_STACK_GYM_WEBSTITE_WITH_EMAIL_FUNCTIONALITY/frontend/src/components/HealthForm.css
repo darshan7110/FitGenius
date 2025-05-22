@@ -889,7 +889,7 @@ button {
 form {
   max-width: 600px;
   /* margin: auto; */
-  padding: 2rem;
+  padding: 1rem;
   /* background: #ffffff; */
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
