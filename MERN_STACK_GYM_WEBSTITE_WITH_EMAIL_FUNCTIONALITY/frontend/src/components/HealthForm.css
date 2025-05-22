@@ -420,7 +420,6 @@ input[type="email"] {
   border-radius: 20px;
   color: white;
   padding: 20px;
-  margin: 20px;
   background-color: black;
 }
 
@@ -585,7 +584,7 @@ button {
 .health-form select,
 .health-form textarea {
   width: 100%;
-  margin: 1.2rem;
+  margin-bottom: 1.2rem;
   border: none;
   border-radius: 12px;
   background: #1e1e1e;
@@ -734,7 +733,7 @@ button {
 }
 
 /* Inputs & selects */
-/* .form-container input,
+.form-container input,
 .form-container select {
   width: 100%;
   border-radius: 0.5rem;
@@ -746,11 +745,11 @@ button {
   box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.2);
   transition: all 0.3s ease;
 }
-*/
+
 .form-container input:focus,
 .form-container select:focus {
   box-shadow: 0 0 5px 2px #00ffff;
-} 
+}
 
 /* Buttons */
 .form-buttons {
@@ -803,7 +802,7 @@ button {
 .form-container input,
 .form-container select {
   width: 100%;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   border: 1px solid rgba(0, 255, 255, 0.3);
   background: #1b1b1b;
   color: #fff;
@@ -830,8 +829,8 @@ button {
 /* OTP Input box */
 .otp-input {
   flex: 1;
-  padding: 0.8rem;
-  border-radius: 0.9rem;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
   background-color: #1e1e1e;
   color: #fff;
   border: 1px solid rgba(0, 255, 255, 0.3);
