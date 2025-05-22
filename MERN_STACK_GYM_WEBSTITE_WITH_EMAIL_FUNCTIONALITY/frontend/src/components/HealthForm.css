@@ -581,7 +581,7 @@ button {
 }
 
 /* --- FORM FIELDS --- */
-.health-form input,
+/* .health-form input,
 .health-form select,
 .health-form textarea {
   width: 100%;
@@ -601,7 +601,7 @@ button {
   background: #2a2a2a;
   box-shadow: 0 0 12px rgba(0, 217, 255, 0.5);
   transform: scale(1.02);
-}
+} */
 
 /* --- BUTTONS --- */
 .health-form button {
@@ -734,7 +734,7 @@ button {
 }
 
 /* Inputs & selects */
-/* .form-container input,
+.form-container input,
 .form-container select {
   width: 100%;
   border-radius: 0.5rem;
@@ -750,7 +750,7 @@ button {
 .form-container input:focus,
 .form-container select:focus {
   box-shadow: 0 0 5px 2px #00ffff;
-} */
+}
 
 /* Buttons */
 .form-buttons {
