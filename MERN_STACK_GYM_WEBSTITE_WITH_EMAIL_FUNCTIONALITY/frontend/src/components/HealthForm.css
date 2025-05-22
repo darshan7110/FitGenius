@@ -417,6 +417,9 @@ input[type="text"],
 input[type="number"],
 input[type="email"] {
   width: 100%;
+  border-radius: 20px;
+  color: white;
+  background-color: black;
 }
 
 /* Plan Scroll Box */
@@ -883,4 +886,73 @@ button {
   .btn-verify {
     width: 100%;
   }
+}
+/* Base form styles */
+form {
+  max-width: 600px;
+  margin: auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Text area styling */
+textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  resize: vertical;
+  transition: 0.3s;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #6c63ff;
+  box-shadow: 0 0 8px rgba(108, 99, 255, 0.3);
+}
+
+/* Select area styling */
+select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  background-color: #f9f9f9;
+  transition: 0.3s;
+}
+
+select:focus {
+  outline: none;
+  border-color: #6c63ff;
+  box-shadow: 0 0 8px rgba(108, 99, 255, 0.3);
+}
+
+/* Button styling */
+button {
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 1rem;
+  background: linear-gradient(135deg, #6c63ff, #7f70fd);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+}
+
+button:hover {
+  background: linear-gradient(135deg, #574b90, #786fa6);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(108, 99, 255, 0.4);
+}
+
+button:active {
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(108, 99, 255, 0.2);
 }
