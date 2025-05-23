@@ -298,6 +298,7 @@
 ---------------------------------- */
 .search-action{
   padding: 30px;
+  margin: 50px;
 }
 .form-actions {
   display: flex;
