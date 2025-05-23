@@ -268,7 +268,7 @@
   display: flex;
   gap:0.5rem;
   margin: 0.5rem;
-  background-color: #000;
+  background-color: transparent;
   flex-direction: column;
 }
 
@@ -296,6 +296,9 @@
 /* ----------------------------------
    Form Button Actions
 ---------------------------------- */
+.search-action{
+  padding: 30px;
+}
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -620,6 +623,10 @@ button {
   box-shadow: 0 6px 15px rgba(0, 255, 255, 0.2);
   transition: all 0.3s ease;
   margin-top: 0.5rem;
+}
+.searchformbtn{
+  padding-bottom: 10px;
+
 }
 
 .health-form button:hover {
