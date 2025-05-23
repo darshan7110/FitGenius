@@ -244,9 +244,9 @@ const HealthForm = () => {
             placeholder="Enter mobile number" 
           />
           <div className="search-actions">
-            <button onClick={handleSearchUser}>🔍 Search User</button>
-            <button onClick={() => updateState({ showForm: true })}>➕ Add New User</button>
-            <button className="home-button" onClick={() => window.location.href = '/'}>🏠 Home Page</button>
+            <button onClick={handleSearchUser} id="searchformbtn">🔍 Search User</button>
+            <button onClick={() => updateState({ showForm: true })}id="searchformbtn" >➕ Add New User</button>
+            <button className="home-button" onClick={() => window.location.href = '/' }id="searchformbtn">🏠 Home Page</button>
           </div>
           {notFound && <div className="text-red-400 mt-2">❌ User not found.</div>}
         </div>
